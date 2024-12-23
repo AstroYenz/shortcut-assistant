@@ -6,4 +6,4 @@ node_modules/
 **/dist/*
 .old_src/styles/output.css
 .env.local
-!/public/manifest.json
+/public/manifest.json
