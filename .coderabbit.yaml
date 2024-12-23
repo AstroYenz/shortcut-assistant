@@ -21,6 +21,9 @@ reviews:
     - '**/*.jsx'
     - '**/*.js'
     - '**/*.json' # For configuration files like manifest.json and tsconfig.json
+    - '**/*.mjs'
+    - '**/*.cjs'
+    - '**/*.html'
   path_instructions:
     - path: '*'
       instructions: 'Do not comment about extra lines. Suggest times where Sentry breadcrumbs
