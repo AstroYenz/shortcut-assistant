@@ -57,13 +57,10 @@
     "typescript-eslint": "^8.18.1",
     "vite": "^6.0.3",
     "vite-plugin-static-copy": "^2.2.0",
-    "vite-plugin-web-extension": "^4.3.1",
-    "webpack": "^5.96.1",
-    "webpack-cli": "^5.1.4"
+    "vite-plugin-web-extension": "^4.3.1"
   },
   "dependencies": {
     "dayjs": "^1.11.13",
-    "dotenv-webpack": "8.1.0",
     "lodash": "^4.17.21",
     "node-html-parser": "^6.1.13",
     "openai": "4.63.0",
