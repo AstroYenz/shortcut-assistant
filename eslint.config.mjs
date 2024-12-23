@@ -19,7 +19,9 @@ export default tseslint.config(
       'node_modules',
       'coverage',
       '.github',
-      '**/*.{js,mjs,cjs}'
+      '**/*.{js,mjs,cjs}',
+      'tests',
+      '.old_src',
     ]
   },
   {
@@ -75,7 +77,7 @@ export default tseslint.config(
       'perfectionist/sort-interfaces': 'off',
       'perfectionist/sort-objects': 'off',
       'perfectionist/sort-object-types': 'off',
-      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-member-accessibility': 'off',
       '@typescript-eslint/no-confusing-void-expression': 'error',
       '@typescript-eslint/no-unnecessary-condition': 'error',
@@ -121,12 +123,6 @@ export default tseslint.config(
       'import/newline-after-import': ['error', {
         count: 2
       }]
-    }
-  },
-  {
-    files: ['**/*.test.*'],
-    rules: {
-      'no-magic-numbers': 'off'
     }
   }
 )
