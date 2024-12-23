@@ -36,7 +36,7 @@ reviews:
     ignore_title_keywords: []
     labels: []
     drafts: false
-    base_branches: []
+    base_branches: ['initiative/*']
   tools:
     shellcheck:
       enabled: false
