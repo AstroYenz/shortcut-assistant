@@ -1,11 +1,11 @@
-import {NotesButton} from '../../src/js/notes/notes-button'
-import {Story} from '../../src/js/utils/story'
+import {NotesButton} from '../../.old_src/js/notes/notes-button'
+import {Story} from '../../.old_src/js/utils/story'
 
 
-jest.mock('../../src/js/utils/sleep', () => ({
+jest.mock('../../.old_src/js/utils/sleep', () => ({
   logError: jest.fn()
 }))
-jest.mock('../../src/js/utils/story', () => ({
+jest.mock('../../.old_src/js/utils/story', () => ({
   Story: {
     getEditDescriptionButtonContainer: jest.fn()
   }

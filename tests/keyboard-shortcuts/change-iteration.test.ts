@@ -1,4 +1,4 @@
-import changeIteration from '../../src/js/keyboard-shortcuts/change-iteration'
+import changeIteration from '../../.old_src/js/keyboard-shortcuts/change-iteration'
 
 
 interface MockedButtonElement extends HTMLElement {

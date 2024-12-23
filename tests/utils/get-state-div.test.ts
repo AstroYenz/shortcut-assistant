@@ -1,4 +1,4 @@
-import {getStateDiv} from '../../src/js/utils/get-state-div'
+import {getStateDiv} from '../../.old_src/js/utils/get-state-div'
 
 
 interface MockParentDiv extends Element {

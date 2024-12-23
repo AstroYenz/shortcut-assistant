@@ -1,4 +1,4 @@
-import getOpenAiToken from '../../src/js/ai/get-openai-token'
+import getOpenAiToken from '../../.old_src/js/ai/get-openai-token'
 
 
 describe('getOpenAiToken', () => {

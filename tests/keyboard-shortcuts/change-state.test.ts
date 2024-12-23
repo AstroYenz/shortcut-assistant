@@ -1,7 +1,7 @@
-import changeState from '../../src/js/keyboard-shortcuts/change-state'
+import changeState from '../../.old_src/js/keyboard-shortcuts/change-state'
 
 
-jest.mock('../../src/js/utils/sleep', () => jest.fn().mockResolvedValue(undefined))
+jest.mock('../../.old_src/js/utils/sleep', () => jest.fn().mockResolvedValue(undefined))
 
 interface MockedButtonElement extends HTMLElement {
   click: jest.Mock;

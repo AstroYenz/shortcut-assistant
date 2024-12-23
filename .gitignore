@@ -4,5 +4,5 @@ node_modules/
 /build/
 **/coverage/
 **/dist/*
-src/styles/output.css
+.old_src/styles/output.css
 .env.local
