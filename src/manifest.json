@@ -62,11 +62,10 @@
   "omnibox": { "keyword" : "sc" },
   "permissions": [
     "activeTab",
-    "clipboardWrite",
     "commands",
     "identity",
     "storage",
     "tabs"
   ],
-  "version": "3.7.4"
+  "version": "3.7.5"
 }
