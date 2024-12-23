@@ -1,0 +1,117 @@
+language: en-US
+tone_instructions: ''
+early_access: true
+enable_free_tier: true
+reviews:
+  profile: assertive
+  request_changes_workflow: true
+  high_level_summary: true
+  high_level_summary_placeholder: '@coderabbitai summary'
+  auto_title_placeholder: '@coderabbitai'
+  review_status: true
+  commit_status: true
+  poem: false
+  collapse_walkthrough: false
+  sequence_diagrams: false
+  changed_files_summary: true
+  labeling_instructions: []
+  path_filters:
+    - '**/*.tsx'
+    - '**/*.ts'
+    - '**/*.jsx'
+    - '**/*.js'
+    - '**/*.json' # For configuration files like manifest.json and tsconfig.json
+    - '**/*.mjs'
+    - '**/*.cjs'
+    - '**/*.html'
+  path_instructions:
+    - path: '*'
+      instructions: 'Do not comment about extra lines. Suggest times where Sentry breadcrumbs
+       can be added to improve error tracking, or additional logging would be beneficial.'
+    - path: '*/test/*'
+      instructions: 'Tests should always use the `it("should...")` format. 
+      when code uses the pattern `x as jest.MockedFunction<typeof x>`, recommend using 
+      `jest.mocked(X)` instead to enhance code clarity.'
+  abort_on_close: true
+  auto_review:
+    enabled: true
+    auto_incremental_review: false
+    ignore_title_keywords: []
+    labels: []
+    drafts: false
+    base_branches: ['initiative/*']
+  tools:
+    shellcheck:
+      enabled: false
+    ruff:
+      enabled: false
+    markdownlint:
+      enabled: true
+    github-checks:
+      enabled: false
+      timeout_ms: 90000
+    languagetool:
+      enabled: false
+      enabled_only: false
+      level: default
+      enabled_rules: []
+      disabled_rules: []
+      enabled_categories: []
+      disabled_categories: []
+    biome:
+      enabled: false
+    hadolint:
+      enabled: true
+    swiftlint:
+      enabled: false
+    phpstan:
+      enabled: false
+      level: default
+    golangci-lint:
+      enabled: false
+    yamllint:
+      enabled: true
+    gitleaks:
+      enabled: true
+    checkov:
+      enabled: true
+    detekt:
+      enabled: false
+    eslint:
+      enabled: true
+    rubocop:
+      enabled: false
+    buf:
+      enabled: false
+    regal:
+      enabled: false
+    actionlint:
+      enabled: false
+    pmd:
+      enabled: false
+    cppcheck:
+      enabled: false
+    semgrep:
+      enabled: true
+    circleci:
+      enabled: true
+    ast-grep:
+      packages: []
+      rule_dirs: []
+      util_dirs: []
+      essential_rules: true
+chat:
+  auto_reply: true
+knowledge_base:
+  opt_out: false
+  learnings:
+    scope: auto
+  issues:
+    scope: auto
+  jira:
+    project_keys: []
+  linear:
+    team_keys:
+      - cccc3934-ce2a-40d2-aa1c-ea872e710081
+  pull_requests:
+    scope: auto

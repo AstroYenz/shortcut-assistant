@@ -1,4 +1,4 @@
-import fs from 'fs'
+import * as fs from 'fs'
 
 import { config } from 'dotenv'
 
@@ -6,7 +6,7 @@ import { config } from 'dotenv'
 config()
 
 
-const manifestTemplate = fs.readFileSync('src/manifest.template.json', 'utf8')
+const manifestTemplate = fs.readFileSync('.old_src/manifest.template.json', 'utf8')
 const version = process.env.VERSION
 if (!version) {
   throw new Error('No version provided')
@@ -21,4 +21,4 @@ const manifest = manifestTemplate.replace(/__([A-Z0-9_]+)__/g, (match, placehold
   return envValue
 })
 
-fs.writeFileSync('src/manifest.json', manifest)
+fs.writeFileSync('.old_src/manifest.json', manifest)

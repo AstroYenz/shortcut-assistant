@@ -6,7 +6,7 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened ]
     paths:
-      - 'src/**'
+      - '../../.old_src/**'
 
 jobs:
   test:
@@ -18,8 +18,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 21.x
-      - run: cd src && yarn install --frozen-lockfile
-      - run: cd src && yarn test-coverage
+      - run: cd .old_src && yarn install --frozen-lockfile
+      - run: cd .old_src && yarn test-coverage
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:

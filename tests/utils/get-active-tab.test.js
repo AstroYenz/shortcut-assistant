@@ -1,4 +1,4 @@
-import {getActiveTab} from '../../src/js/utils/get-active-tab'
+import {getActiveTab} from '../../.old_src/js/utils/get-active-tab'
 
 
 describe('getActiveTab', () => {

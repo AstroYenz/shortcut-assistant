@@ -1,4 +1,4 @@
-import camelToSnake from '../../src/js/utils/camel-to-snake'
+import camelToSnake from '../../.old_src/js/utils/camel-to-snake'
 
 
 describe('Camel To Snake', () => {

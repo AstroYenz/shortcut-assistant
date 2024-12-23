@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.app.json",
+  "include": ["src/**/*"]
+  // To be restored once tests reflect new structure
+  //  "include": ["src/**/*", "tests/**/*"]
+}

@@ -1,8 +1,8 @@
-import {analyzeStoryDescription} from '../../src/js/analyze/analyze-story-description'
-import {Story} from '../../src/js/utils/story'
+import {analyzeStoryDescription} from '../../.old_src/js/analyze/analyze-story-description'
+import {Story} from '../../.old_src/js/utils/story'
 
 
-jest.mock('../../src/js/utils/story')
+jest.mock('../../.old_src/js/utils/story')
 
 
 describe('analyzeStoryDescription function', () => {

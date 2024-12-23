@@ -62,7 +62,6 @@
   "omnibox": { "keyword" : "sc" },
   "permissions": [
     "activeTab",
-    "clipboardWrite",
     "commands",
     "identity",
     "storage",

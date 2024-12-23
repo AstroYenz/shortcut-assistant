@@ -1,4 +1,4 @@
-import changeEstimate, {setEstimate} from '../../src/js/keyboard-shortcuts/change-estimate'
+import changeEstimate, {setEstimate} from '../../.old_src/js/keyboard-shortcuts/change-estimate'
 
 
 interface MockedElement extends Element {
