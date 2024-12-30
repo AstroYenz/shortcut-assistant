@@ -7,6 +7,8 @@ on:
     types: [ opened, synchronize, reopened ]
     paths:
       - 'src/**'
+      - 'tests/**'
+      - 'package.json'
 
 jobs:
   test:
