@@ -40,7 +40,7 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.9.0",
     "eslint-plugin-perfectionist": "^4.4.0",
-    "globals": "^15.13.0",
+    "globals": "^15.14.0",
     "jest": "^29.7.0",
     "jest-chrome": "^0.8.0",
     "jest-environment-jsdom": "29.7.0",
