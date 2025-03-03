@@ -58,7 +58,7 @@
     "dotenv-webpack": "8.1.0",
     "lodash": "^4.17.21",
     "node-html-parser": "^6.1.13",
-    "openai": "4.63.0",
+    "openai": "4.86.1",
     "ts-jest": "^29.2.5",
     "uuid": "^9.0.1"
   },
