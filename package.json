@@ -6,17 +6,21 @@
   "author": "Jens Astrup",
   "scripts": {
     "dev": "webpack --config webpack.config.dev.js",
+    "dev:react": "ENABLE_REACT=true webpack --config webpack.config.dev.js",
     "build-css": "postcss src/styles/index.css -o src/styles/output.css",
     "test": "TZ='UTC' jest --config jest.config.js",
     "test-coverage": "TZ='UTC' jest --coverage --config jest.config.js",
     "lint": "eslint src",
     "lint-fix": "eslint --ext .ts src --fix",
     "build": "ts-node src/build-manifest.ts",
-    "dist": "npx webpack && cp -r node_modules build/ && cd build && zip -r ../dist/dist.zip . -x \"coverage*\" \"*/*.test.js\""
+    "build:react": "ENABLE_REACT=true ts-node src/build-manifest.ts",
+    "dist": "npx webpack && cp -r node_modules build/ && cd build && zip -r ../dist/dist.zip . -x \"coverage*\" \"*/*.test.js\"",
+    "dist:react": "ENABLE_REACT=true npx webpack && cp -r node_modules build/ && cd build && zip -r ../dist/dist.zip . -x \"coverage*\" \"*/*.test.js\""
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.26.0",
     "@eslint/compat": "^1.2.6",
     "@eslint/eslintrc": "^3.2.0",
@@ -33,6 +37,7 @@
     "babel-jest": "^29.7.0",
     "babel-loader": "9.2.1",
     "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
     "daisyui": "4.12.23",
     "dotenv": "16.4.7",
     "eslint": "^8.57.0",
@@ -47,6 +52,7 @@
     "postcss": "8.4.49",
     "postcss-cli": "11.0.0",
     "postcss-import": "16.1.0",
+    "style-loader": "^4.0.0",
     "tailwindcss": "3.4.17",
     "ts-loader": "^9.5.1",
     "typescript": "^5.7.2",
@@ -54,12 +60,22 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.0",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "dotenv-webpack": "8.1.0",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.503.0",
     "node-html-parser": "^6.1.13",
     "openai": "4.63.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.2.0",
     "ts-jest": "^29.2.5",
+    "tw-animate-css": "^1.2.8",
     "uuid": "^9.0.1"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"

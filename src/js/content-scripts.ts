@@ -1,4 +1,3 @@
-
 import LabelsContentScript from '@sx/ai/labels/content-script'
 import { AiFunctions } from '@sx/analyze/ai-functions'
 import { logError } from '@sx/utils/log-error'
@@ -11,9 +10,9 @@ import changeIteration from './keyboard-shortcuts/change-iteration'
 import changeState from './keyboard-shortcuts/change-state'
 import { KeyboardShortcuts } from './keyboard-shortcuts/keyboard-shortcuts'
 import { NotesButton } from './notes/notes-button'
+import { initializeReact, cleanupReact } from './react-bridge'
 import { Todoist } from './todoist/todoist'
 import { getSyncedSetting } from './utils/get-synced-setting'
-
 
 
 export async function activate(): Promise<void> {
@@ -39,6 +38,13 @@ export async function activate(): Promise<void> {
     logError(e as Error)
   }
   new NotesButton()
+  // Check if React is enabled in the build
+  const isReactEnabled = process.env.ENABLE_REACT === 'true'
+
+  // Initialize React components if compiled into the build
+  if (isReactEnabled) {
+    initializeReact()
+  }
 }
 
 export async function handleMessage(request: { message: string, url: string }): Promise<void> {
@@ -62,6 +68,13 @@ export async function handleMessage(request: { message: string, url: string }): 
       await Todoist.setTaskButtons()
     }
     new NotesButton()
+
+    const isReactEnabled = process.env.ENABLE_REACT === 'true'
+    // Re-initialize React components if compiled into the build
+    if (isReactEnabled) {
+      cleanupReact()
+      initializeReact()
+    }
   }
   if (request.message === 'change-state') {
     await changeState()
