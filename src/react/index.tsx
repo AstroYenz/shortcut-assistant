@@ -6,7 +6,7 @@ import FAB from './components/FAB'
 /**
  * Initialize React application and mount the FAB component
  */
-export function initReact() {
+export function initReact(): void {
   // Check if FAB container already exists
   let container = document.getElementById('shortcut-assistant-fab-container')
   // Create container if it doesn't exist
@@ -24,7 +24,7 @@ export function initReact() {
 /**
  * Clean up React components
  */
-export function unmountReact() {
+export function unmountReact(): void {
   const container = document.getElementById('shortcut-assistant-fab-container')
   if (container) {
     document.body.removeChild(container)
