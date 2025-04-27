@@ -64,8 +64,10 @@ module.exports = {
   },
   resolve: {
     alias: {
-      // Translate TypeScript paths to Webpack aliases
-      '@sx': path.resolve(__dirname, './src/js/')
+      '@sx': [
+        path.resolve(__dirname, './src/js/'),
+        path.resolve(__dirname, './src/react/')
+      ]
     },
     extensions: ['.tsx', '.ts', '.js', '.jsx']
   },

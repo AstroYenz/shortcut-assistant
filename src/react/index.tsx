@@ -1,7 +1,10 @@
 import React from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, Root } from 'react-dom/client'
 
 import FAB from './components/FAB'
+
+// Store the React root instance for proper cleanup
+let fabRoot: Root | undefined
 
 /**
  * Initialize React application and mount the FAB component
@@ -16,9 +19,11 @@ export function initReact(): void {
     document.body.appendChild(container)
   }
 
-  // Create React root and render FAB
-  const root = createRoot(container)
-  root.render(<FAB />)
+  // Only create root if it hasn't been created yet
+  if (!fabRoot) {
+    fabRoot = createRoot(container)
+  }
+  fabRoot.render(<FAB />)
 }
 
 /**
@@ -26,7 +31,9 @@ export function initReact(): void {
  */
 export function unmountReact(): void {
   const container = document.getElementById('shortcut-assistant-fab-container')
-  if (container) {
+  if (container && fabRoot) {
+    fabRoot.unmount()
+    fabRoot = undefined
     document.body.removeChild(container)
   }
 }

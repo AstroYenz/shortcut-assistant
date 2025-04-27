@@ -43,7 +43,12 @@ export async function activate(): Promise<void> {
 
   // Initialize React components if compiled into the build
   if (isReactEnabled) {
-    initializeReact()
+    try {
+      initializeReact()
+    }
+    catch (e) {
+      logError(e as Error)
+    }
   }
 }
 
