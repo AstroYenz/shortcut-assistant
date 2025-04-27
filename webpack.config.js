@@ -2,8 +2,13 @@
 const path = require('path')
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+const webpack = require('webpack')
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const baseConfig = require('./webpack.config.base')
 
+// Feature flag for React support
+const enableReactInBuild = process.env.ENABLE_REACT === 'true'
 
 module.exports = {
 
@@ -28,7 +33,8 @@ module.exports = {
       './src/js/index.ts',
       './src/js/additional-content/content-script.ts',
     ],
-    'js/analytics/bundle': './src/js/analytics/event.ts'
+    'js/analytics/bundle': './src/js/analytics/event.ts',
+    ...(enableReactInBuild ? { 'js/react/bundle': './src/react/index.tsx' } : {})
   },
 
   output: {
@@ -49,17 +55,26 @@ module.exports = {
           loader: 'babel-loader'
         },
         exclude: /node_modules/
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
       }
     ]
   },
   resolve: {
     alias: {
-      // Translate TypeScript paths to Webpack aliases
-      '@sx': path.resolve(__dirname, './src/js/')
+      '@sx': [
+        path.resolve(__dirname, './src/js/'),
+        path.resolve(__dirname, './src/react/')
+      ]
     },
-    extensions: ['.tsx', '.ts', '.js']
+    extensions: ['.tsx', '.ts', '.js', '.jsx']
   },
   plugins: [
-    ...baseConfig.plugins
+    ...baseConfig.plugins,
+    new webpack.DefinePlugin({
+      'process.env.ENABLE_REACT': JSON.stringify(enableReactInBuild)
+    })
   ]
 }
