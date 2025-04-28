@@ -70,7 +70,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.503.0",
     "node-html-parser": "^6.1.13",
-    "openai": "4.63.0",
+    "openai": "4.96.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.2.0",
