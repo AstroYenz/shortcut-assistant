@@ -1,5 +1,6 @@
 {
   "name": "shortcut-assistant",
+  "version": "3.7.6",
   "description": "A browser extension for power users of Shortcut",
   "main": "src/index.ts",
   "repository": "https://github.com/JensAstrup/shortcut-assistant",
