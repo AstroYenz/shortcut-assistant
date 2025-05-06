@@ -17,7 +17,9 @@
     "build:react": "ENABLE_REACT=true ts-node src/build-manifest.ts",
     "dist": "npx webpack && cp -r node_modules build/ && cd build && zip -r ../dist/dist.zip . -x \"coverage*\" \"*/*.test.js\"",
     "dist:react": "ENABLE_REACT=true npx webpack && cp -r node_modules build/ && cd build && zip -r ../dist/dist.zip . -x \"coverage*\" \"*/*.test.js\"",
-    "version-up": "tsx scripts/update-version.mts"
+    "version-up": "tsx scripts/update-version.mts",
+    "version": "tsx scripts/update-env-version.mts && yarn build",
+    "postversion": "tsx scripts/post-version.mts"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

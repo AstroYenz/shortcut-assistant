@@ -90,6 +90,27 @@ Standard: `MAJOR.MINOR.PATCH`
 
 **Patch**: Bug fixes or internal changes not affecting the user experience
 
+### Updating the Version
+
+To update the version of the extension, use Yarn's standard version command:
+
+```bash
+# For a patch version bump (e.g., 1.0.0 -> 1.0.1)
+yarn version --patch
+
+# For a minor version bump (e.g., 1.0.0 -> 1.1.0)
+yarn version --minor
+
+# For a major version bump (e.g., 1.0.0 -> 2.0.0)
+yarn version --major
+```
+
+This will:
+1. Update the version in `package.json`
+2. Update or create `.env` with the new version
+3. Run the build process
+4. Output instructions for committing, tagging, and pushing the changes
+
 ## Authors
 
 - **Jens Astrup** - [JensAstrup](https://github.com/JensAstrup)
