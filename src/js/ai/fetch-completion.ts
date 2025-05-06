@@ -1,12 +1,11 @@
 import OpenAI from 'openai'
-import { Chat } from 'openai/resources'
+import { ChatCompletionMessageParam } from 'openai/resources/chat/completions'
 
 import { AiPromptType } from '@sx/analyze/types/ai-prompt-type'
 import { AiProcessMessage, AiProcessMessageType } from '@sx/analyze/types/AiProcessMessage'
 
 import PROMPT from './prompt'
 
-import ChatCompletionMessageParam = Chat.ChatCompletionMessageParam
 
 
 const BREAKUP_PROMPT = 'You are a Senior Engineering Manager who is assisting team members with taking'
