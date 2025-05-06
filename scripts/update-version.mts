@@ -14,11 +14,19 @@ import path from 'path'
 import dotenv from 'dotenv'
 
 /**
- * Runs a command in the shell and returns the output
- * @param {string} command - The command to run
- * @returns {string} The output of the command
+ * Type for allowed commands to prevent command injection
  */
-function runCommand(command: string): string {
+type AllowedCommand =
+  | `yarn version --${'major' | 'minor' | 'patch'} --no-git-tag-version`
+  | 'yarn build'
+
+/**
+ * Runs a command in the shell and returns the output
+ * @param {AllowedCommand} command - The command to run (restricted to safe predefined commands)
+ * @returns {string} The output of the command
+ * @throws {Error} If the command fails to execute
+ */
+function runCommand(command: AllowedCommand): string {
   try {
     return execSync(command, { encoding: 'utf8' }).trim()
   }
@@ -26,7 +34,7 @@ function runCommand(command: string): string {
     const errorMessage = error instanceof Error ? error.message : String(error)
     process.stderr.write(`Error executing command: ${command}\n`)
     process.stderr.write(`${errorMessage}\n`)
-    process.exit(1)
+    throw new Error(`Command failed: ${command}\n${errorMessage}`)
   }
 }
 
@@ -76,7 +84,7 @@ function main(): void {
   process.stdout.write(`Updating version (${versionType})...\n`)
 
   // Run yarn version to update package.json
-  const result = runCommand(`yarn version --${versionType} --no-git-tag-version`)
+  const result = runCommand(`yarn version --${versionType} --no-git-tag-version` as AllowedCommand)
 
   // Extract new version from yarn output
   const versionMatch = result.match(/New version: (.+)$/m)
@@ -93,9 +101,11 @@ function main(): void {
 
   // Run build process
   process.stdout.write('Running build process...\n')
-  runCommand('yarn build')
+  try {
+    runCommand('yarn build')
 
-  process.stdout.write(`
+    // Only show success message if build completes without errors
+    process.stdout.write(`
 ✅ Version update complete!
 - package.json updated to ${newVersion}
 - .env updated with VERSION=${newVersion}
@@ -106,6 +116,20 @@ Next steps:
 2. Tag the release: git tag v${newVersion}
 3. Push changes: git push && git push --tags
 `)
+  }
+  catch (error) {
+    // The build failed, so we show an error message instead
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    process.stderr.write(`❌ Build process failed!\n${errorMessage}\n`)
+    process.stderr.write(`
+Version numbers were updated but the build failed:
+- package.json updated to ${newVersion}
+- .env updated with VERSION=${newVersion}
+
+Please fix the build issues before proceeding.
+`)
+    process.exit(1)
+  }
 }
 
 main()
