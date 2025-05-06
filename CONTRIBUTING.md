@@ -70,6 +70,43 @@ placed directly under the feature's root directory.
 - Write clear and concise commit messages.
 - Ensure your changes are well-documented.
 
+## Versioning and Releases
+
+When you're ready to release a new version of the extension, follow these steps:
+
+1. Make sure all changes are committed to the `develop` branch.
+2. Run the standard Yarn version command with the appropriate version type:
+
+   ```bash
+   # For a patch version bump (e.g., 1.0.0 -> 1.0.1)
+   yarn version --patch
+
+   # For a minor version bump (e.g., 1.0.0 -> 1.1.0)
+   yarn version --minor
+
+   # For a major version bump (e.g., 1.0.0 -> 2.0.0)
+   yarn version --major
+   ```
+
+3. The version script will:
+   - Update the version in `package.json`
+   - Update or create the VERSION in `.env`
+   - Run the build process
+   - Output instructions for the next steps
+
+4. Follow the output instructions to:
+   - Commit the changes: `git commit -am "Bump version to X.Y.Z"`
+   - Tag the release: `git tag vX.Y.Z`
+   - Push changes: `git push && git push --tags`
+
+5. Create a new release on GitHub, using the tag you just pushed.
+6. Generate the distribution ZIP file for the Chrome Web Store:
+   ```bash
+   yarn dist
+   ```
+
+7. Upload the generated ZIP file to the Chrome Web Store Developer Dashboard.
+
 ## Contribution Process
 
 1. Fork the repository.

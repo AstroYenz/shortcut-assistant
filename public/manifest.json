@@ -1,12 +1,26 @@
 {
   "action": {
-    "default_popup": "./html/popup.html",
-    "default_icon": "assets/assistant.png"
+    "default_popup": ""
   },
   "background": {
-    "service_worker": "js/service_worker/bundle.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://app.shortcut.com/*"
+      ],
+      "js": [
+        "contentInjectDialog.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+  {
+    "resources": ["index.css"],
+    "matches": ["<all_urls>"]
+  }
+],
   "commands": {
     "change-state": {
       "suggested_key": {
@@ -23,33 +37,16 @@
       "description": "Update the iteration of the current story"
     },
     "update-estimate": {
-
       "description": "Update the estimate of the current story"
     }
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://app.shortcut.com/*"
-      ],
-      "js": [
-        "js/contentScripts/bundle.js"
-      ],
-      "type": "module",
-      "run_at": "document_end"
-    }
-  ],
   "description": "An extension by and for Shortcut power users. Adds AI functionality, keyboard shortcuts, and more.",
   "host_permissions": [
     "https://api.openai.com/*",
     "https://proxy-zcffd.ondigitalocean.app/*",
-    "https://www.googleapis.com/*"
+    "https://www.googleapis.com/*",
+    "https://app.shortcut.com/*"
   ],
-  "icons": {
-    "16": "assets/assistant.png",
-    "48": "assets/assistant.png",
-    "128": "assets/assistant.png"
-  },
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAus6PbWXROXHE0r4auNCgdnyPORxKySdO2JVdOIaPAaBFDFCIkkPmsmb9mYSPeLrdQZFSDqDWT1TQtRkeH5G7zIqsS8qFM6BfcfpoX3/CwmSzFdjgDTyxDjiDAvcWYPh/FP+wTHlTsc7u+RZGLwwQqHUBRdY35kjphaloOoakn+Kf48xW5IiiS2K4hHl90Ar85VA8ERDLF6XREOi9i9Oi3T13NSIctmkVnRg9TLZIrUDjZQ9awsl2RHDYeHotv96gimq2Enb+Rysa2sTWTFHn9PYNrdllTMAF8PcYKFcxAZpvhHNpnqYMbtl8gcU+DftwA3I9BZ0BITwtH6r/8mU9XQIDAQAB",
   "manifest_version": 3,
   "name": "Shortcut Assistant",
@@ -59,13 +56,16 @@
       "openid"
     ]
   },
-  "omnibox": { "keyword" : "sc" },
+  "omnibox": {
+    "keyword": "sc"
+  },
   "permissions": [
     "activeTab",
     "commands",
     "identity",
+    "scripting",
     "storage",
     "tabs"
   ],
-  "version": "3.7.6"
+  "version": "3.7.4"
 }
