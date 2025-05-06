@@ -7,7 +7,6 @@ import { AiProcessMessage, AiProcessMessageType } from '@sx/analyze/types/AiProc
 import PROMPT from './prompt'
 
 
-
 const BREAKUP_PROMPT = 'You are a Senior Engineering Manager who is assisting team members with taking'
   + ' a large user story and breaking it up into smaller  more approachable (from an engineering work'
   + ' perspective) stories and subtasks. '
