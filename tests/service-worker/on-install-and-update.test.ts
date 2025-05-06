@@ -6,6 +6,11 @@ import {
 } from '@sx/service-worker/on-install-and-update'
 
 
+jest.mock('@sx/constants', () => ({
+  CHANGELOG_VERSION: '1.0.0'
+}))
+
+
 describe('InstallAndUpdate class', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -77,7 +82,6 @@ describe('onInstallAndUpdate function', () => {
   })
 
   it('should not call onUpdate if versions do not match', () => {
-    process.env.CHANGELOG_VERSION = '1.0.0'
     process.env.VERSION = '2.0.0'
 
     const details = { reason: OnInstalledReason.UPDATE } as chrome.runtime.InstalledDetails
@@ -89,7 +93,6 @@ describe('onInstallAndUpdate function', () => {
   })
 
   afterAll(() => {
-    delete process.env.CHANGELOG_VERSION
     delete process.env.VERSION
   })
 })
