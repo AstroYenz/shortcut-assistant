@@ -7,8 +7,6 @@ const webpack = require('webpack')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const baseConfig = require('./webpack.config.base')
 
-// Feature flag for React support
-const enableReactInBuild = process.env.ENABLE_REACT === 'true'
 
 module.exports = {
 
@@ -34,7 +32,7 @@ module.exports = {
       './src/js/additional-content/content-script.ts',
     ],
     'js/analytics/bundle': './src/js/analytics/event.ts',
-    ...(enableReactInBuild ? { 'js/react/bundle': './src/react/index.tsx' } : {})
+    'js/react/bundle': './src/react/index.tsx'
   },
 
   output: {
@@ -71,8 +69,5 @@ module.exports = {
   },
   plugins: [
     ...baseConfig.plugins,
-    new webpack.DefinePlugin({
-      'process.env.ENABLE_REACT': JSON.stringify(enableReactInBuild)
-    })
   ]
 }

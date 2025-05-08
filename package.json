@@ -15,8 +15,8 @@
     "lint-fix": "eslint --ext .ts src --fix",
     "build": "ts-node src/build-manifest.ts",
     "build:react": "ENABLE_REACT=true ts-node src/build-manifest.ts",
-    "dist": "npx webpack && cp -r node_modules build/ && cd build && zip -r ../dist/dist.zip . -x \"coverage*\" \"*/*.test.js\"",
-    "dist:react": "ENABLE_REACT=true npx webpack && cp -r node_modules build/ && cd build && zip -r ../dist/dist.zip . -x \"coverage*\" \"*/*.test.js\"",
+    "dist": "NODE_ENV=production npx webpack && cd build && zip -r ../dist/dist.zip . -x \"coverage*\" \"*/*.test.js\"",
+    "dist:react": "ENABLE_REACT=true NODE_ENV=production npx webpack && cp -r node_modules build/ && cd build && zip -r ../dist/dist.zip . -x \"coverage*\" \"*/*.test.js\"",
     "version-up": "tsx scripts/update-version.mts",
     "version": "tsx scripts/update-env-version.mts && yarn build",
     "postversion": "tsx scripts/post-version.mts"
