@@ -1,0 +1,29 @@
+---
+description: 
+globs: *.test*
+alwaysApply: false
+---
+- Structure test files to mirror the source directory structure
+- Test files should have the same name as the source file with .test.tsx extension
+- Test file location:
+  - A file at `src/app/page.tsx` should have a test at `tests/app/page.test.tsx`
+  - A component at `src/components/button.tsx` should have a test at `tests/components/button.test.tsx`
+- Organize tests in this order:
+  1. Imports (testing utilities, mock setup)
+  2. Mock definitions
+  3. Setup mock implementations
+  4. describe block(s)
+  5. beforeEach/afterEach hooks
+  6. Test cases (it blocks), organized in the same order as the relevant function definitons
+- Group related tests in nested describe blocks when appropriate
+- Use clear test case names that describe the expected behavior:
+  - `it('should render loading state when isLoading is true')`
+  - `it('should call API when form is submitted')`
+- Structure each test case in the AAA pattern:
+  - Arrange: set up test data and conditions
+  - Act: perform the action to test
+  - Assert: verify the expected outcome
+- Focus on testing one thing per test case
+- Extract common setup code to beforeEach or helper functions
+- For complex components, consider separating rendering tests from behavior tests 
+- Do not write unnecessary comments that explain simple behavior. 
