@@ -9,12 +9,12 @@ import { sendEvent } from '@sx/analytics/event'
 import { getOrCreateSessionId } from '@sx/analytics/session-id'
 
 
-jest.mock('../../src/js/analytics/client-id', () => ({
+jest.mock('@sx/analytics/client-id', () => ({
   getOrCreateClientId: jest.fn()
 }))
 const mockGetOrCreateClientId = getOrCreateClientId as jest.Mock
 
-jest.mock('../../src/js/analytics/session-id', () => ({
+jest.mock('@sx/analytics/session-id', () => ({
   getOrCreateSessionId: jest.fn()
 }))
 const mockGetOrCreateSessionId = getOrCreateSessionId as jest.Mock

@@ -1,8 +1,8 @@
-import {analyzeStoryDescription} from '../../src/js/analyze/analyze-story-description'
-import {Story} from '../../src/js/utils/story'
+import { analyzeStoryDescription } from '@sx/analyze/analyze-story-description'
+import { Story } from '@sx/utils/story'
 
 
-jest.mock('../../src/js/utils/story')
+jest.mock('@sx/utils/story')
 
 
 describe('analyzeStoryDescription function', () => {
@@ -17,7 +17,7 @@ describe('analyzeStoryDescription function', () => {
 
     expect(global.chrome.runtime.sendMessage).toHaveBeenCalledWith({
       action: 'callOpenAI',
-      data: {prompt: Story.description}
+      data: { prompt: Story.description }
     })
   })
 

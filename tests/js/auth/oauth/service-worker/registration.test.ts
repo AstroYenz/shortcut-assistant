@@ -9,6 +9,7 @@ global.chrome = {
     local: {
       ...chrome.storage.local,
       get: jest.fn(),
+      remove: jest.fn()
     },
   },
 }

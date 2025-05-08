@@ -1,8 +1,8 @@
 import {
   redirectFromOmnibox,
   setOmniboxSuggestion
-} from '../../../src/js/service-worker/omnibox/omnibox'
-import {SlugManager} from '../../../src/js/service-worker/slug-manager'
+} from '@sx/service-worker/omnibox/omnibox'
+import { SlugManager } from '@sx/service-worker/slug-manager'
 
 
 global.chrome = {

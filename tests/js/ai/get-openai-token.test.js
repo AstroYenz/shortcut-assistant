@@ -1,8 +1,7 @@
-import getOpenAiToken from '../../src/js/ai/get-openai-token'
+import getOpenAiToken from '@sx/ai/get-openai-token'
 
 
 describe('getOpenAiToken', () => {
-
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -11,9 +10,9 @@ describe('getOpenAiToken', () => {
     const expectedToken = 'test-token'
     chrome.storage.local.get.mockImplementation((key, callback) => {
       if (typeof callback !== 'function') {
-        return {'openAIToken': expectedToken}
+        return { openAIToken: expectedToken }
       }
-      callback({'openAIToken': expectedToken})
+      callback({ openAIToken: expectedToken })
     })
 
     const token = await getOpenAiToken()

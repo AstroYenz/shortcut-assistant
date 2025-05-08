@@ -1,4 +1,4 @@
-import sleep from '../../src/js/utils/sleep'
+import sleep from '@sx/utils/sleep'
 
 
 describe('sleep function', () => {

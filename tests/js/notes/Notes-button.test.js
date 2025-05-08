@@ -1,11 +1,11 @@
-import {NotesButton} from '../../src/js/notes/notes-button'
-import {Story} from '../../src/js/utils/story'
+import { NotesButton } from '@sx/notes/notes-button'
+import { Story } from '@sx/utils/story'
 
 
-jest.mock('../../src/js/utils/sleep', () => ({
+jest.mock('@sx/utils/sleep', () => ({
   logError: jest.fn()
 }))
-jest.mock('../../src/js/utils/story', () => ({
+jest.mock('@sx/utils/story', () => ({
   Story: {
     getEditDescriptionButtonContainer: jest.fn()
   }
@@ -15,11 +15,10 @@ describe('Notes class', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     Story.getEditDescriptionButtonContainer.mockResolvedValue(document.createElement('div'))
-    chrome.runtime.sendMessage.mockResolvedValue({data: 'Mocked Data'})
+    chrome.runtime.sendMessage.mockResolvedValue({ data: 'Mocked Data' })
     const originalLocation = window.location
     delete window.location
-    window.location = {...originalLocation, href: 'http://app.shortcut.com/story'}
-
+    window.location = { ...originalLocation, href: 'http://app.shortcut.com/story' }
   })
 
   describe('constructor', () => {

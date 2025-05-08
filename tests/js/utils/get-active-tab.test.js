@@ -1,4 +1,4 @@
-import {getActiveTab} from '../../src/js/utils/get-active-tab'
+import { getActiveTab } from '@sx/utils/get-active-tab'
 
 
 describe('getActiveTab', () => {
@@ -24,7 +24,7 @@ describe('getActiveTab', () => {
       return [expectedTab]
     })
     const result = await getActiveTab()
-    expect(chrome.tabs.query).toHaveBeenCalledWith({active: true, currentWindow: true})
+    expect(chrome.tabs.query).toHaveBeenCalledWith({ active: true, currentWindow: true })
     expect(result).toEqual(expectedTab)
   })
 
