@@ -15,6 +15,15 @@ function FAB(): React.ReactElement {
     setIsOpen(!isOpen)
   }
 
+  function handleOpenSettings(): void {
+    setOpenDrawer('settings')
+    setIsOpen(false) // Close the FAB menu when opening a drawer
+  }
+
+  function handleDrawerChange(drawer: DrawerType | null): void {
+    setOpenDrawer(drawer)
+  }
+
   return (
     <>
       <div className="shortcut-assistant-fab">
@@ -32,16 +41,17 @@ function FAB(): React.ReactElement {
             <button className="shortcut-assistant-fab-menu-item">Add Labels</button>
             <button
               className="shortcut-assistant-fab-menu-item"
-              onClick={() => {
-                setOpenDrawer('settings')
-              }}
+              onClick={handleOpenSettings}
             >
               <Settings />
             </button>
           </div>
         )}
       </div>
-      <Drawers openDrawer={openDrawer} />
+      <Drawers
+        openDrawer={openDrawer}
+        onOpenChange={handleDrawerChange}
+      />
     </>
   )
 }

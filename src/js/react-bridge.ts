@@ -1,5 +1,3 @@
-import { MessageResponse } from './types/message-response'
-
 /**
  * Initialize React components
  */
@@ -23,7 +21,7 @@ export function cleanupReact(): void {
  * Bridge for React components to interact with Chrome extension APIs
  */
 
-// Notify content script
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function notifyContentScript<T>(message: unknown): Promise<T> {
   return new Promise((resolve) => {
     window.postMessage({ type: 'FROM_PAGE', message }, '*')
@@ -34,18 +32,7 @@ function notifyContentScript<T>(message: unknown): Promise<T> {
         resolve(event.data.response as T)
       }
     }
-wa
-    window.addEventListener('message', listener)
-  })
-}
 
-/**
- * Submits the Shortcut API token to be stored securely
- * Handles the same authentication flow as the legacy extension
- */
-export function submitShortcutApiToken(token: string): Promise<MessageResponse> {
-  return notifyContentScript<MessageResponse>({
-    action: 'submitShortcutApiToken',
-    data: { token }
+    window.addEventListener('message', listener)
   })
 }

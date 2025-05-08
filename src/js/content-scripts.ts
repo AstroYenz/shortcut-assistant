@@ -122,6 +122,25 @@ window.addEventListener('message', (event) => {
       })
   }
 
+  if (payload?.action === 'initiateGoogleOAuth') {
+    handleInitiateGoogleOAuth()
+      .then((response) => {
+        window.postMessage({
+          type: 'FROM_CONTENT',
+          response
+        }, '*')
+      })
+      .catch((error) => {
+        window.postMessage({
+          type: 'FROM_CONTENT',
+          response: {
+            success: false,
+            error: error.message || 'Failed to authenticate with Google'
+          }
+        }, '*')
+      })
+  }
+
   // Other action handlers can be added here
 })
 
@@ -149,6 +168,32 @@ async function handleSubmitShortcutApiToken(token: string): Promise<{ success: b
   }
   catch (error) {
     console.error('Error in handleSubmitShortcutApiToken:', error)
+    throw error
+  }
+}
+
+// Handle Google OAuth authentication
+async function handleInitiateGoogleOAuth(): Promise<{ success: boolean, message: string, error?: string }> {
+  try {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({
+        action: 'initiateGoogleOAuth'
+      }, (response) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message))
+          return
+        }
+
+        resolve({
+          success: response?.success ?? true,
+          message: response?.message || 'Google authentication successful',
+          error: response?.error
+        })
+      })
+    })
+  }
+  catch (error) {
+    console.error('Error in handleInitiateGoogleOAuth:', error)
     throw error
   }
 }
