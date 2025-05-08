@@ -10,6 +10,7 @@ let fabRoot: Root | undefined
  * Initialize React application and mount the FAB component
  */
 export function initReact(): void {
+  document.documentElement.classList.add('dark')
   // Check if FAB container already exists
   let container = document.getElementById('shortcut-assistant-fab-container')
   // Create container if it doesn't exist

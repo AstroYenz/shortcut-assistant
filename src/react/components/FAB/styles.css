@@ -61,6 +61,9 @@
   cursor: pointer;
   transition: background-color 0.15s, border-color 0.15s, color 0.15s;
   outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .shortcut-assistant-fab-menu-item:hover,
