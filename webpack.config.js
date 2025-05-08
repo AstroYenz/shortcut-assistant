@@ -58,16 +58,14 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       }
     ]
   },
   resolve: {
     alias: {
-      '@sx': [
-        path.resolve(__dirname, './src/js/'),
-        path.resolve(__dirname, './src/react/')
-      ]
+      '@sx': path.resolve(__dirname, './src/js/'),
+      '@': path.resolve(__dirname, './src/react/')
     },
     extensions: ['.tsx', '.ts', '.js', '.jsx']
   },
