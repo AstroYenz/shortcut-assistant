@@ -95,7 +95,7 @@ jobs:
               github, 
               context, 
               core, 
-              releaseId: ${{ needs.prepare-release-assets.outputs.release_id }} 
+              releaseId: ${{ needs.prepare-release-assets.outputs.release_id }}
             });
 
   publish-release:
