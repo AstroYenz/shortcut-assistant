@@ -4,7 +4,7 @@ jest.mock('@sx/popup/popup', () => {
   }
 })
 
-import {Popup} from '@sx/popup/popup'
+import { Popup } from '@sx/popup/popup'
 
 
 describe('Popup Initializer', () => {
@@ -22,7 +22,7 @@ describe('Popup Initializer', () => {
     document.addEventListener = jest.fn((event, callback) => {
       if (event === 'DOMContentLoaded') {
         // @ts-expect-error - TS doesn't know about the mock implementation
-        if(typeof callback === 'function') callback()
+        if (typeof callback === 'function') callback()
       }
     })
     document.dispatchEvent(new Event('DOMContentLoaded'))

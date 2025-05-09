@@ -1,4 +1,4 @@
-import {getOrCreateSessionId} from '@sx/analytics/session-id'
+import { getOrCreateSessionId } from '@sx/analytics/session-id'
 
 
 global.chrome = {
@@ -48,7 +48,7 @@ describe('getOrCreateSessionId', () => {
       session_id: 'existing-session-id',
       timestamp: new Date('2020-01-01').getTime().toString() // Session started at 2020-01-01 00:00:00
     }
-    global.chrome.storage.session.get = jest.fn().mockResolvedValue({sessionData})
+    global.chrome.storage.session.get = jest.fn().mockResolvedValue({ sessionData })
 
     const sessionId = await getOrCreateSessionId()
 
@@ -71,7 +71,7 @@ describe('getOrCreateSessionId', () => {
       session_id: 'expired-session-id',
       timestamp: new Date('2020-01-01').getTime().toString()
     }
-    global.chrome.storage.session.get = jest.fn().mockResolvedValue({sessionData})
+    global.chrome.storage.session.get = jest.fn().mockResolvedValue({ sessionData })
 
     const sessionId = await getOrCreateSessionId()
 

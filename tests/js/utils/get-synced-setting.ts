@@ -1,4 +1,4 @@
-import {getSyncedSetting} from '@sx/utils/get-synced-setting'
+import { getSyncedSetting } from '@sx/utils/get-synced-setting'
 
 
 global.chrome = {
@@ -8,7 +8,7 @@ global.chrome = {
     ...global.chrome.storage,
     sync: {
       get: jest.fn((key, callback) => {
-        const data = {test: 'expectedValue'}
+        const data = { test: 'expectedValue' }
         if (typeof callback === 'function') {
           callback(data)
         }

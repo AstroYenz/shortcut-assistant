@@ -53,7 +53,6 @@ describe('change iteration', () => {
 
   it('should error to console if no input select is found in changeIteration function', async () => {
     const mockChildButton = { click: jest.fn() }
-    console.log = jest.fn()
     jest.spyOn(document, 'querySelector').mockReturnValueOnce(null)
     const mockedIterationSelect = {
       querySelector: jest.fn().mockReturnValue(mockChildButton),

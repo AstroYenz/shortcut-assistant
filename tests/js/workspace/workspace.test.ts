@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import {logError} from '@sx/utils/log-error'
+import { logError } from '@sx/utils/log-error'
 import Workspace from '@sx/workspace/workspace'
 
 
@@ -39,12 +39,14 @@ describe('Workspace', () => {
   it('should get states on activation', async () => {
     const states = { Backlog: [], Unstarted: [], Started: [], Done: [] }
     jest.spyOn(Workspace, 'states').mockResolvedValue(states)
+    // eslint-disable-next-line @typescript-eslint/await-thenable, @typescript-eslint/no-confusing-void-expression
     await Workspace.activate()
     expect(Workspace.states).toHaveBeenCalled()
   })
 
   it('should log error if states cannot be fetched', async () => {
     jest.spyOn(Workspace, 'states').mockRejectedValue(new Error('Failed to fetch states'))
+    // eslint-disable-next-line @typescript-eslint/await-thenable, @typescript-eslint/no-confusing-void-expression
     await Workspace.activate()
     expect(logError).toHaveBeenCalled()
   })

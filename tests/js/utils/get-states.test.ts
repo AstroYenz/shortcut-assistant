@@ -1,6 +1,6 @@
 import changeState from '@sx/keyboard-shortcuts/change-state'
 import extractText from '@sx/utils/extract-text'
-import _getStates, {ShortcutWorkflowStates} from '@sx/utils/get-states'
+import _getStates, { ShortcutWorkflowStates } from '@sx/utils/get-states'
 import sleep from '@sx/utils/sleep'
 
 // Mocking dependencies
@@ -25,10 +25,10 @@ describe('_getStates', () => {
     const result = await _getStates()
 
     const expectedStateMap: ShortcutWorkflowStates = {
-      'Backlog': [],
-      'Unstarted': [],
-      'Started': [],
-      'Done': []
+      Backlog: [],
+      Unstarted: [],
+      Started: [],
+      Done: []
     }
 
     expect(result).toEqual(expectedStateMap)
@@ -37,7 +37,7 @@ describe('_getStates', () => {
   it('should process dropdown elements and assign values to respective states', async () => {
     mockedChangeState.mockResolvedValue(undefined)
     mockedSleep.mockResolvedValue(undefined)
-    mockedExtractText.mockImplementation((div) => div.textContent?.trim() || '')
+    mockedExtractText.mockImplementation(div => div.textContent?.trim() || '')
 
     document.body.innerHTML = `
       <div data-perma-id="popover">
@@ -57,10 +57,10 @@ describe('_getStates', () => {
     const result = await _getStates()
 
     const expectedStateMap: ShortcutWorkflowStates = {
-      'Backlog': ['In Progress'],
-      'Unstarted': ['To Do'],
-      'Started': [],
-      'Done': []
+      Backlog: ['In Progress'],
+      Unstarted: ['To Do'],
+      Started: [],
+      Done: []
     }
 
     expect(result).toEqual(expectedStateMap)
@@ -74,10 +74,10 @@ describe('_getStates', () => {
     const result = await _getStates()
 
     const expectedStateMap: ShortcutWorkflowStates = {
-      'Backlog': [],
-      'Unstarted': [],
-      'Started': [],
-      'Done': []
+      Backlog: [],
+      Unstarted: [],
+      Started: [],
+      Done: []
     }
 
     expect(result).toEqual(expectedStateMap)

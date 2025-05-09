@@ -17,7 +17,6 @@ global.chrome = {
 
 
 describe('redirectFromOmnibox', () => {
-
   beforeEach(() => {
     global.chrome.tabs.update.mockClear()
     global.chrome.tabs.create.mockClear()
@@ -28,17 +27,17 @@ describe('redirectFromOmnibox', () => {
     const text = '123'
     const expectedUrl = 'https://app.shortcut.com/test/story/123'
     SlugManager.getCompanySlug.mockResolvedValue('test')
-    redirectFromOmnibox(text, disposition).then(() => {
-      expect(chrome.tabs.update).toHaveBeenCalledWith({url: expectedUrl})
-    })
+    redirectFromOmnibox(text, disposition)
+    expect(chrome.tabs.update).toHaveBeenCalledWith({ url: expectedUrl })
   })
 
   it('should update the current tab with the correct URL when the disposition is currentTab', () => {
     const text = 'test'
     const disposition = 'currentTab'
 
-    const expectedUrl = {url: `https://app.shortcut.com/search#${encodeURIComponent(text)}`}
+    const expectedUrl = { url: `https://app.shortcut.com/search#${encodeURIComponent(text)}` }
 
+    // eslint-disable-next-line jest/valid-expect-in-promise
     redirectFromOmnibox(text, disposition).then(() => {
       expect(chrome.tabs.update).toHaveBeenCalledWith(expectedUrl)
     })
@@ -48,8 +47,9 @@ describe('redirectFromOmnibox', () => {
     const text = 'test'
     const disposition = 'newForegroundTab'
 
-    const expectedUrl = {url: `https://app.shortcut.com/search#${encodeURIComponent(text)}`}
+    const expectedUrl = { url: `https://app.shortcut.com/search#${encodeURIComponent(text)}` }
 
+    // eslint-disable-next-line jest/valid-expect-in-promise
     redirectFromOmnibox(text, disposition).then(() => {
       expect(global.chrome.tabs.create).toHaveBeenCalledWith(expectedUrl)
     })
@@ -64,6 +64,7 @@ describe('redirectFromOmnibox', () => {
       active: false
     }
 
+    // eslint-disable-next-line jest/valid-expect-in-promise
     redirectFromOmnibox(text, disposition).then(() => {
       expect(global.chrome.tabs.create).toHaveBeenCalledWith(expectedUrl)
     })
@@ -73,8 +74,9 @@ describe('redirectFromOmnibox', () => {
     const text = 'test'
     const disposition = 'unknown'
 
-    const expectedUrl = {url: `https://app.shortcut.com/search#${encodeURIComponent(text)}`}
+    const expectedUrl = { url: `https://app.shortcut.com/search#${encodeURIComponent(text)}` }
 
+    // eslint-disable-next-line jest/valid-expect-in-promise
     redirectFromOmnibox(text, disposition).then(() => {
       expect(global.chrome.tabs.update).toHaveBeenCalledWith(expectedUrl)
     })
@@ -90,7 +92,7 @@ describe('setOmniboxSuggestion', () => {
   it('should set the default suggestion to open the story when a number is provided', async () => {
     const text = '123'
     const companySlug = 'test'
-    const expectedSuggestion = {description: `Open story sc-${text}`}
+    const expectedSuggestion = { description: `Open story sc-${text}` }
 
     SlugManager.getCompanySlug.mockResolvedValue(companySlug)
 
@@ -102,7 +104,7 @@ describe('setOmniboxSuggestion', () => {
   it('should set the default suggestion to search for the text when a string is provided', async () => {
     const text = 'test'
     const companySlug = ''
-    const expectedSuggestion = {description: `Search shortcut for ${text}`}
+    const expectedSuggestion = { description: `Search shortcut for ${text}` }
 
     SlugManager.getCompanySlug.mockResolvedValue(companySlug)
 

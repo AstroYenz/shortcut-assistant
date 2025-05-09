@@ -1,9 +1,9 @@
-import {getActiveTabUrl} from '../../src/js/utils/get-active-tab-url'
+import { getActiveTabUrl } from '../../src/js/utils/get-active-tab-url'
 
 
 describe('getActiveTabUrl function', () => {
   it('resolves with the URL of the active tab if one exists', async () => {
-    const mockTab = {url: 'https://jestjs.io'}
+    const mockTab = { url: 'https://jestjs.io' }
     global.chrome.tabs.query.mockImplementationOnce((_queryInfo, callback) => {
       if (typeof callback === 'function') {
         callback([mockTab])
@@ -22,7 +22,7 @@ describe('getActiveTabUrl function', () => {
       return []
     })
 
-    await expect(getActiveTabUrl()).rejects.toThrowError('No active tab found')
+    await expect(getActiveTabUrl()).rejects.toThrow('No active tab found')
   })
 
   it('rejects with the chrome.runtime.lastError if one exists', async () => {
@@ -35,6 +35,6 @@ describe('getActiveTabUrl function', () => {
       return []
     })
 
-    await expect(getActiveTabUrl()).rejects.toThrowError(mockError)
+    await expect(getActiveTabUrl()).rejects.toThrow(mockError)
   })
 })

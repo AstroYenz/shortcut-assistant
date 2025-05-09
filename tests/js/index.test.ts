@@ -1,11 +1,11 @@
-import {activate} from '@sx/content-scripts'
-import {CycleTime} from '@sx/cycle-time/cycle-time'
-import {DevelopmentTime} from '@sx/development-time/development-time'
-import {KeyboardShortcuts} from '@sx/keyboard-shortcuts/keyboard-shortcuts'
-import {NotesButton} from '@sx/notes/notes-button'
-import {Todoist} from '@sx/todoist/todoist'
-import {getSyncedSetting} from '@sx/utils/get-synced-setting'
-import {Story} from '@sx/utils/story'
+import { activate } from '@sx/content-scripts'
+import { CycleTime } from '@sx/cycle-time/cycle-time'
+import { DevelopmentTime } from '@sx/development-time/development-time'
+import { KeyboardShortcuts } from '@sx/keyboard-shortcuts/keyboard-shortcuts'
+import { NotesButton } from '@sx/notes/notes-button'
+import { Todoist } from '@sx/todoist/todoist'
+import { getSyncedSetting } from '@sx/utils/get-synced-setting'
+import { Story } from '@sx/utils/story'
 
 import Manifest = chrome.runtime.Manifest
 
@@ -37,7 +37,7 @@ const mockedGetSyncedSetting = getSyncedSetting as jest.Mock
 
 global.chrome = {
   runtime: {
-    getManifest: jest.fn(() => ({version: '1.0.0'} as Manifest)),
+    getManifest: jest.fn(() => ({ version: '1.0.0' } as Manifest)),
     // @ts-expect-error Migrating from JS
     onMessage: {
       addListener: jest.fn()

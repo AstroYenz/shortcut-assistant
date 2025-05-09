@@ -57,7 +57,7 @@ describe('Auth Service Worker Listeners', () => {
     mockRegisterUser.mockResolvedValue(undefined)
     // For chrome.storage.local.set
     mockStorageSet.mockImplementation((data, callback) => {
-      if (callback) callback()
+      callback()
       return Promise.resolve()
     })
   })

@@ -1,6 +1,6 @@
-import {CycleTime} from '@sx/cycle-time/cycle-time'
-import {hoursBetweenExcludingWeekends} from '@sx/utils/hours-between-excluding-weekends'
-import {Story} from '@sx/utils/story'
+import { CycleTime } from '@sx/cycle-time/cycle-time'
+import { hoursBetweenExcludingWeekends } from '@sx/utils/hours-between-excluding-weekends'
+import { Story } from '@sx/utils/story'
 
 
 jest.mock('@sx/utils/hours-between-excluding-weekends', () => ({
@@ -21,6 +21,7 @@ jest.mock('@sx/workspace/workspace', () => {
       await MockWorkspace.states()
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     static async states(fetch = true) {
       if (!fetch) {
         return null
@@ -44,7 +45,7 @@ describe('set function', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    document.querySelector = jest.fn().mockImplementation(selector => {
+    document.querySelector = jest.fn().mockImplementation((selector) => {
       if (selector === '.story-date-cycle-time') return null // simulate absence initially
       if (selector === '.story-date-created') return createdDiv
       if (selector === '.story-date-completed') return completedDiv
@@ -66,7 +67,7 @@ describe('set function', () => {
     }
     // @ts-expect-error - Migrating from JS
     completedDiv = {
-      querySelector: jest.fn().mockReturnValue({innerHTML: '2022-09-23'})
+      querySelector: jest.fn().mockReturnValue({ innerHTML: '2022-09-23' })
     }
     // @ts-expect-error - Migrating from JS
     storyCreatedDivParent = createdDiv.parentElement
@@ -84,7 +85,7 @@ describe('set function', () => {
 
   it('should log an error if there is no created date', async () => {
     mockedStory.isCompleted.mockResolvedValue(true)
-    document.querySelector = jest.fn().mockImplementation(selector => {
+    document.querySelector = jest.fn().mockImplementation((selector) => {
       if (selector === '.story-date-cycle-time') return null // simulate absence initially
       if (selector === '.story-date-created') return null
       if (selector === '.story-date-completed') return completedDiv
@@ -96,7 +97,7 @@ describe('set function', () => {
 
   it('should log an error if there is no in development date', async () => {
     mockedStory.isInState.mockResolvedValue(true)
-    document.querySelector = jest.fn().mockImplementation(selector => {
+    document.querySelector = jest.fn().mockImplementation((selector) => {
       if (selector === '.story-date-cycle-time') return null // simulate absence initially
       if (selector === '.story-date-created') return createdDiv
       if (selector === '.story-date-completed') return null

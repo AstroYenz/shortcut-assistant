@@ -56,7 +56,7 @@ describe('change state', () => {
     expect(document.getElementById).toHaveBeenCalledWith('story-dialog-state-dropdown')
   })
 
-  it('should log error to console if no popup is found in changeState function', async () => {
+  it('should log error to console if no popup is found in changeState function', () => {
     console.error = jest.fn()
     const mockedPopup = { querySelector: jest.fn().mockReturnValue(null) }
 
@@ -67,20 +67,5 @@ describe('change state', () => {
 
     expect(mockedDropdown.click).toHaveBeenCalled()
     expect(mockedPopup.querySelector).not.toHaveBeenCalled()
-  })
-
-  it.skip('changeState function with no input', async () => {
-    const mockedPopup = { querySelector: jest.fn() } as MockedSelectElement
-    const mockedInput = null
-
-
-    jest.spyOn(document, 'querySelector').mockReturnValueOnce(mockedPopup)
-
-    mockedPopup.querySelector.mockReturnValue(mockedInput)
-
-    changeState()
-
-    expect(mockedDropdown.click).toHaveBeenCalled()
-    expect(mockedPopup.querySelector).toHaveBeenCalled()
   })
 })

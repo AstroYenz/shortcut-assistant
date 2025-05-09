@@ -1,4 +1,4 @@
-import {hoursBetweenExcludingWeekends} from '@sx/utils/hours-between-excluding-weekends'
+import { hoursBetweenExcludingWeekends } from '@sx/utils/hours-between-excluding-weekends'
 
 
 describe('hoursBetweenExcludingWeekends', () => {

@@ -6,6 +6,7 @@ import {
   handleInitiateGoogleOAuth
 } from '@/content-bridge'
 
+
 jest.mock('@/index', () => ({
   initReact: jest.fn(),
   unmountReact: jest.fn()
