@@ -1,11 +1,11 @@
-type Message = {
+type Message<T extends Record<string, unknown>> = {
   action: string
-  data: Record<string, unknown>
+  data: T
 }
 
-type MessageResponse = {
+type MessageResponse<T extends Record<string, unknown>> = {
   success: boolean
-  data: Record<string, unknown>
+  data: T
 }
 
 export type { Message, MessageResponse }

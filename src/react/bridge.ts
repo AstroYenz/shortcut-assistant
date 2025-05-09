@@ -6,7 +6,7 @@ import { Message, MessageResponse } from '@/client/types/message'
  * @param message - The message to send to the content script
  * @returns A promise that resolves to the response from the content script
  */
-function notifyContentScript<T>(message: Message): Promise<T> {
+function notifyContentScript<T>(message: Message<Record<string, unknown>>): Promise<T> {
   const RESPONSE_TIMEOUT_MS = 5000
   const MILLISECONDS_PER_SECOND = 1000
 
@@ -63,8 +63,8 @@ function createMessageListener<T>(resolve: (value: T) => void): MessageListenerW
  * Submits the Shortcut API token to be stored securely
  * Handles the same authentication flow as the legacy extension
  */
-function submitShortcutApiToken(token: string): Promise<MessageResponse> {
-  return notifyContentScript<MessageResponse>({
+function submitShortcutApiToken(token: string): Promise<MessageResponse<{ success: boolean, message: string, error?: string }>> {
+  return notifyContentScript<MessageResponse<{ success: boolean, message: string, error?: string }>>({
     action: 'submitShortcutApiToken',
     data: { token }
   })
@@ -74,8 +74,8 @@ function submitShortcutApiToken(token: string): Promise<MessageResponse> {
  * Initiates the Google OAuth flow
  * Returns a success response when authentication is complete
  */
-function initiateGoogleOAuth(): Promise<MessageResponse> {
-  return notifyContentScript<MessageResponse>({
+function initiateGoogleOAuth(): Promise<MessageResponse<{ success: boolean, message: string, error?: string }>> {
+  return notifyContentScript<MessageResponse<{ success: boolean, message: string, error?: string }>>({
     action: 'initiateGoogleOAuth',
     data: {}
   })

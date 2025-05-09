@@ -37,7 +37,6 @@ const states = { Backlog: [], Unstarted: [], Started: [], Done: [] }
 
 describe('Workspace', () => {
   it('should get states on activation', async () => {
-    const states = { Backlog: [], Unstarted: [], Started: [], Done: [] }
     jest.spyOn(Workspace, 'states').mockResolvedValue(states)
     // eslint-disable-next-line @typescript-eslint/await-thenable, @typescript-eslint/no-confusing-void-expression
     await Workspace.activate()

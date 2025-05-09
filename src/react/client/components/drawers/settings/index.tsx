@@ -14,7 +14,7 @@ type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface SettingsProps {
   open: boolean
-  onOpenChange?: (open: boolean) => void
+  onOpenChange: (open: boolean) => void
 }
 
 function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
@@ -40,9 +40,7 @@ function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
 
   function handleOpenChange(open: boolean): void {
     setShowSettings(open)
-    if (onOpenChange) {
-      onOpenChange(open)
-    }
+    onOpenChange(open)
   }
 
   function handleApiKeyChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -72,7 +70,7 @@ function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
         }, STATUS_RESET_DELAY_MS)
       }
       else {
-        console.error('Error submitting API token:', response.data.error)
+        console.error('Error submitting API token:', response.data?.error)
         setSubmitStatus('error')
         // Reset the error state after the same delay as success
         setTimeout(() => {

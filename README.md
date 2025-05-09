@@ -40,12 +40,15 @@ If you're looking to install the extension, visit the [Chrome Web Store](https:/
    ```bash
     cp .env.example .env
     ```
+
 4. Install Doppler CLI  
+
    ```bash
    brew install doppler/tap/doppler-cli  
    ```
 
 5. Authenticate and set project/config  
+
    ```bash
    doppler login  
    doppler setup --project shortcut-assistant --config dev  

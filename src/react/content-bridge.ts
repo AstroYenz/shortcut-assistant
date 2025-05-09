@@ -97,7 +97,17 @@ async function handleInitiateGoogleOAuth(): Promise<{ success: boolean, message:
         action: 'initiateGoogleOAuth'
       }, (response) => {
         if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message))
+          // Provide more specific error messages based on common OAuth errors
+          const errorMessage = chrome.runtime.lastError.message || ''
+          if (errorMessage.includes('user_cancelled')) {
+            reject(new Error('Authentication was cancelled by the user'))
+          }
+          else if (errorMessage.includes('access_denied')) {
+            reject(new Error('Access was denied. Please grant the required permissions'))
+          }
+          else {
+            reject(new Error(chrome.runtime.lastError.message || 'Unknown error during Google authentication'))
+          }
           return
         }
 

@@ -250,6 +250,30 @@ describe('Content Bridge', () => {
 
       await expect(handleInitiateGoogleOAuth()).rejects.toThrow('Test error message')
     })
+
+    it('rejects with user cancelled error when appropriate', async () => {
+      const mockChromeSendMessage = jest.fn().mockImplementation((_message, callback) => {
+        chrome.runtime.lastError = { message: 'Error during OAuth: user_cancelled' }
+        callback(undefined)
+        chrome.runtime.lastError = undefined
+      })
+
+      chrome.runtime.sendMessage = mockChromeSendMessage
+
+      await expect(handleInitiateGoogleOAuth()).rejects.toThrow('Authentication was cancelled by the user')
+    })
+
+    it('rejects with access denied error when appropriate', async () => {
+      const mockChromeSendMessage = jest.fn().mockImplementation((_message, callback) => {
+        chrome.runtime.lastError = { message: 'Error during OAuth: access_denied' }
+        callback(undefined)
+        chrome.runtime.lastError = undefined
+      })
+
+      chrome.runtime.sendMessage = mockChromeSendMessage
+
+      await expect(handleInitiateGoogleOAuth()).rejects.toThrow('Access was denied. Please grant the required permissions')
+    })
   })
 
   describe('initializeReactBridge', () => {

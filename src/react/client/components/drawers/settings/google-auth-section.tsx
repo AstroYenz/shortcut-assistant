@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 
 import { initiateGoogleOAuth } from '@/bridge'
 import { Button } from '@/client/components/ui/button'
+import { cn } from '@/client/lib/utils/cn'
 
 
 type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'error'
@@ -66,11 +67,10 @@ function GoogleAuthSection({ onAuthStatusChange }: GoogleAuthSectionProps): Reac
       <Button
         onClick={handleGoogleAuth}
         disabled={authStatus === 'loading' || authStatus === 'authenticated'}
-        className={
-          authStatus === 'authenticated'
-            ? 'bg-green-600'
-            : authStatus === 'error' ? 'bg-red-600' : ''
-        }
+        className={cn(
+          authStatus === 'authenticated' && 'bg-green-600',
+          authStatus === 'error' && 'bg-red-600'
+        )}
       >
         {buttonText}
       </Button>

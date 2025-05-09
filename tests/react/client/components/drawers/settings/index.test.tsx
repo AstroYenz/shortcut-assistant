@@ -32,18 +32,8 @@ jest.mock('@/client/components/drawers/settings/google-auth-section', () => ({
 }))
 
 const mockSubmitShortcutApiToken = jest.mocked(submitShortcutApiToken)
+const mockChromeLocalGet = jest.mocked(chrome.storage.local.get)
 
-const mockChromeLocalGet = jest.fn()
-Object.defineProperty(global, 'chrome', {
-  value: {
-    storage: {
-      local: {
-        get: mockChromeLocalGet
-      }
-    }
-  },
-  writable: true
-})
 
 describe('Settings component', function testSettingsComponentSuite() {
   const defaultProps = {
