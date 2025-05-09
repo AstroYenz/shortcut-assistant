@@ -53,8 +53,7 @@
       "jest",
       "node",
       "react",
-      "react-dom",
-      "jest-dom"
+      "react-dom"
     ],
     /* Specify type package names to be included without being referenced in a source file. */
     // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */

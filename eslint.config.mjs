@@ -149,4 +149,6 @@ export default [...fixupConfigRules(compat.extends(
     'no-magic-numbers': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
   },
+}, {
+  ignores: ['src/react/client/components/ui/**'],
 }]

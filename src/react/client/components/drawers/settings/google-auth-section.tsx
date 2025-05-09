@@ -6,8 +6,6 @@ import { Button } from '@/client/components/ui/button'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
-const STATUS_RESET_DELAY_MS = 3000
-
 export type GoogleAuthSectionProps = {
   onAuthStatusChange?: (status: Status) => void
 }
