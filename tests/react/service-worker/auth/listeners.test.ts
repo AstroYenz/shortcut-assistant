@@ -16,30 +16,7 @@ jest.mock('@/service-worker/auth/registration', () => ({
   registerUser: jest.fn()
 }))
 
-// Setup Chrome mocks
-global.chrome = {
-  ...global.chrome,
-  runtime: {
-    ...global.chrome.runtime,
-    lastError: undefined,
-    onMessage: {
-      ...global.chrome.runtime.onMessage,
-      addListener: jest.fn()
-    }
-  },
-  identity: {
-    ...global.chrome.identity,
-    getAuthToken: jest.fn()
-  },
-  storage: {
-    ...global.chrome.storage,
-    local: {
-      ...global.chrome.storage.local,
-      get: jest.fn(),
-      set: jest.fn()
-    }
-  }
-}
+// We're now using the global chrome mock from jest.chromeSetup.js
 
 describe('Auth Service Worker Listeners', () => {
   let sendResponse: jest.Mock<void, [response?: ResponseType]>
@@ -53,13 +30,7 @@ describe('Auth Service Worker Listeners', () => {
     sendResponse = jest.fn()
     global.chrome.runtime.lastError = undefined
 
-    // Default mock implementations
     mockRegisterUser.mockResolvedValue(undefined)
-    // For chrome.storage.local.set
-    mockStorageSet.mockImplementation((data, callback) => {
-      callback()
-      return Promise.resolve()
-    })
   })
 
   describe('handleProcessShortcutApiToken', () => {
@@ -277,7 +248,7 @@ describe('Auth Service Worker Listeners', () => {
       })
 
       // Mock storage.set to throw error
-      mockStorageSet.mockImplementationOnce((_data, _callback) => {
+      mockStorageSet.mockImplementationOnce((_data) => {
         return Promise.reject(new Error('Storage error'))
       })
 

@@ -5,16 +5,7 @@ import {
 import { SlugManager } from '@sx/service-worker/slug-manager'
 
 
-global.chrome = {
-  tabs: {
-    update: jest.fn(),
-    create: jest.fn()
-  },
-  omnibox: {
-    setDefaultSuggestion: jest.fn()
-  }
-}
-
+// No need to redefine chrome mock here, it's coming from jest.chromeSetup.js
 
 describe('redirectFromOmnibox', () => {
   beforeEach(() => {
@@ -22,12 +13,12 @@ describe('redirectFromOmnibox', () => {
     global.chrome.tabs.create.mockClear()
   })
 
-  it('should update the current tab with the given URL if one is provided', () => {
+  it('should update the current tab with the given URL if one is provided', async () => {
     const disposition = 'currentTab'
     const text = '123'
     const expectedUrl = 'https://app.shortcut.com/test/story/123'
     SlugManager.getCompanySlug.mockResolvedValue('test')
-    redirectFromOmnibox(text, disposition)
+    await redirectFromOmnibox(text, disposition)
     expect(chrome.tabs.update).toHaveBeenCalledWith({ url: expectedUrl })
   })
 
