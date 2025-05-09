@@ -6,6 +6,13 @@ module.exports = async ({ github, context, core, releaseId }) => {
   const fs = require('fs');
   const { owner, repo } = context.repo;
   
+  console.log("DEBUG - Received releaseId:", releaseId);
+  
+  if (!releaseId) {
+    core.setFailed("Release ID is missing or undefined");
+    return;
+  }
+  
   const assetPath = './dist/dist.zip';
   const assetName = 'ChromeExtension.zip';
   

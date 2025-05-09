@@ -95,7 +95,7 @@ jobs:
               github, 
               context, 
               core, 
-              releaseId: ${{ needs.prepare-release-assets.outputs.release_id }}
+              releaseId: ${{ needs.prepare-release-assets.outputs.release_id || 0 }}
             });
 
   publish-release:
@@ -111,10 +111,11 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            console.log("Job outputs:", ${{ toJSON(needs.prepare-release-assets.outputs) }});
             const publishRelease = require('./.github/scripts/publish-release.js');
             await publishRelease({ 
               github, 
               context, 
               core, 
-              releaseId: ${{ needs.prepare-release-assets.outputs.release_id }}
+              releaseId: ${{ needs.prepare-release-assets.outputs.release_id || 0 }}
             });
