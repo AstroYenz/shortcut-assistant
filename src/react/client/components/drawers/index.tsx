@@ -1,8 +1,8 @@
-import { Settings } from '@/components/drawers/settings'
-import { DrawerType } from '@/types/drawer'
+import { Settings } from '@/client/components/drawers/settings'
+import { DrawerType } from '@/client/types/drawer'
 
 
-function Drawers({ openDrawer, onOpenChange }: { openDrawer: DrawerType | null; onOpenChange?: (drawer: DrawerType | null) => void }): React.ReactElement {
+function Drawers({ openDrawer, onOpenChange }: { openDrawer: DrawerType | null, onOpenChange?: (drawer: DrawerType | null) => void }): React.ReactElement {
   function handleSettingsOpenChange(open: boolean): void {
     if (!open && onOpenChange) {
       onOpenChange(null)

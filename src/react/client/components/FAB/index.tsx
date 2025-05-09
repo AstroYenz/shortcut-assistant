@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 
 import '@sx/../styles/globals.css'
 import './styles.css'
-import { Drawers } from '@/components/drawers'
-import { DrawerType } from '@/types/drawer'
+import { Drawers } from '@/client/components/drawers'
+import { DrawerType } from '@/client/types/drawer'
 
 
 function FAB(): React.ReactElement {

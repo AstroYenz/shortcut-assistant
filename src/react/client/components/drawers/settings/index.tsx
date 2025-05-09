@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 
 import { initiateGoogleOAuth, submitShortcutApiToken } from '@/bridge'
-import { ApiTokenSection } from '@/components/drawers/settings/ApiTokenSection'
-import { GoogleAuthSection } from '@/components/drawers/settings/GoogleAuthSection'
-import { Button } from '@/components/ui/button'
-import { Drawer, DrawerContent, DrawerFooter } from '@/components/ui/drawer'
+import { ApiTokenSection } from '@/client/components/drawers/settings/ApiTokenSection'
+import { GoogleAuthSection } from '@/client/components/drawers/settings/GoogleAuthSection'
+import { Button } from '@/client/components/ui/button'
+import { Drawer, DrawerContent, DrawerFooter } from '@/client/components/ui/drawer'
 
 
 const STATUS_RESET_DELAY_MS = 3000

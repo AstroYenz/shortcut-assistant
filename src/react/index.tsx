@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot, Root } from 'react-dom/client'
 
-import FAB from './components/FAB'
+import FAB from '@/client/components/FAB'
 
 // Store the React root instance for proper cleanup
 let fabRoot: Root | undefined

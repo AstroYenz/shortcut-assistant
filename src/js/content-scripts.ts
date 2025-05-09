@@ -10,7 +10,7 @@ import changeIteration from './keyboard-shortcuts/change-iteration'
 import changeState from './keyboard-shortcuts/change-state'
 import { KeyboardShortcuts } from './keyboard-shortcuts/keyboard-shortcuts'
 import { NotesButton } from './notes/notes-button'
-import { initializeReact, cleanupReact } from './react-bridge'
+import { cleanupReact, initializeReact } from './react-bridge'
 import { Todoist } from './todoist/todoist'
 import { getSyncedSetting } from './utils/get-synced-setting'
 
@@ -121,7 +121,6 @@ window.addEventListener('message', (event) => {
         }, '*')
       })
   }
-
   if (payload?.action === 'initiateGoogleOAuth') {
     handleInitiateGoogleOAuth()
       .then((response) => {
