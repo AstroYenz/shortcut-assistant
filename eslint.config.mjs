@@ -147,5 +147,6 @@ export default [...fixupConfigRules(compat.extends(
 
   rules: {
     'no-magic-numbers': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
   },
 }]

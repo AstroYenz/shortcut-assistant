@@ -1,6 +1,6 @@
 ---
-description: 
-globs: *.test*
+description: When writing tests
+globs: 
 alwaysApply: false
 ---
 - Structure test files to mirror the source directory structure
@@ -27,3 +27,6 @@ alwaysApply: false
 - Extract common setup code to beforeEach or helper functions
 - For complex components, consider separating rendering tests from behavior tests 
 - Do not write unnecessary comments that explain simple behavior. 
+- Use only one `describe` per function/class within a file 
+- Use jest.chromeSetup.js to create global mocks of Chrome APIs for all tests
+- Create typed mock functions using the pattern const mockFunction = originalFunction as jest.Mock

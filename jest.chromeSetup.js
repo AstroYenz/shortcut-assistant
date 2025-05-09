@@ -27,10 +27,10 @@ global.chrome = {
       set: jest.fn().mockResolvedValue({}),
       get: jest.fn((key, callback) => {
         if (typeof callback === 'function') {
-          callback({[key]: 'expectedValue'})
+          callback({ [key]: 'expectedValue' })
         }
         else {
-          return {[key]: 'expectedValue'}
+          return { [key]: 'expectedValue' }
         }
       })
     },
@@ -38,7 +38,7 @@ global.chrome = {
       set: jest.fn().mockResolvedValue({}),
       get: jest.fn((key, callback) => {
         if (typeof callback === 'function') {
-          callback({[key]: 'expectedValue'})
+          callback({ [key]: 'expectedValue' })
         }
       })
     },
@@ -46,7 +46,7 @@ global.chrome = {
       set: jest.fn().mockResolvedValue({}),
       get: jest.fn((key, callback) => {
         if (typeof callback === 'function') {
-          callback({[key]: 'expectedValue'})
+          callback({ [key]: 'expectedValue' })
         }
       })
     }
@@ -54,10 +54,10 @@ global.chrome = {
   tabs: {
     query: jest.fn((queryInfo, callback) => {
       if (typeof callback === 'function') {
-        callback([{url: 'https://jestjs.io'}])
+        callback([{ url: 'https://jestjs.io' }])
       }
       else {
-        return [{url: 'https://jestjs.io'}]
+        return [{ url: 'https://jestjs.io' }]
       }
     }),
     onUpdated: {

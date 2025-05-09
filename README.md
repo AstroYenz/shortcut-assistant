@@ -40,16 +40,7 @@ If you're looking to install the extension, visit the [Chrome Web Store](https:/
    ```bash
     cp .env.example .env
     ```
-    - `VERSION` - The version of the extension.
-    - `SENTRY_RELEASE` - This should be the same as the `VERSION` variable.
-    - `CHANGELOG_VERSION` - The version the in-app changelog was last updated for.
-    - `SENTRY_AUTH_TOKEN` - The Sentry auth token for the project.
-    - `GOOGLE_ANALYTICS_API_SECRET` - A Google Analytics API secret. 
-    - `GOOGLE_MEASUREMENT_ID` - The Google Measurement ID for the project.
-    - `PROXY_URL` - The URL of the proxy server for OpenAI's API
-   
-Note that some of these variables are missing from the `.env` file in this repository as they are 
-included in the GitHub repository secrets.
+All variables are stored in Doppler and are synced to Github for use in the release workflow.
 
 ### Running the Extension Locally
 
