@@ -2,55 +2,50 @@ name: Publish Release
 
 on:
   workflow_run:
-    workflows: ["Prepare Release Assets"]
+    workflows: ["Release Version"]
     types:
       - completed
 
+# Define minimum required permissions
+permissions:
+  contents: write    # Needed for updating releases
+  actions: read      # Needed to download artifacts
+
 jobs:
-  upload-release-asset:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' && github.event.pull_request.merged == true }}
+  publish-release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.head_branch != 'main' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download dist.zip artifact
-        uses: actions/download-artifact@v4.1.7
+      - name: Download workflow artifacts
+        uses: dawidd6/action-download-artifact@v2
         with:
+          workflow: ${{ github.event.workflow_run.workflow_id }}
           name: dist-zip
           path: dist
 
-      - name: Upload release asset
+      - name: Get PR information
+        id: pr_info
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const { owner, repo } = context.repo;
-            const pr = context.payload.pull_request;
-            const releases = await github.rest.repos.listReleases({
-              owner,
-              repo,
+            const getMergedPrInfo = require('./.github/scripts/get-merged-pr-info.js');
+            return await getMergedPrInfo({ github, context, core });
+
+      - name: Update and publish release
+        if: steps.pr_info.outputs.pr_title
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const updateAndPublishRelease = require('./.github/scripts/update-and-publish-release.js');
+            await updateAndPublishRelease({ 
+              github, 
+              context, 
+              core, 
+              releaseTag: '${{ steps.pr_info.outputs.pr_title }}',
+              releaseBody: '${{ steps.pr_info.outputs.pr_body }}'
             });
-            const releaseTag = pr.title;
-            let draftRelease = releases.data.find(release => release.tag_name === releaseTag && release.draft === true);
-            const releaseId = draftRelease.id;
-            const assetPath = './dist/dist.zip';
-            const assetName = 'ChromeExtension.zip';
-            const assetContentType = 'application/zip'; 
-            const data = require('fs').readFileSync(assetPath);
-            console.log(`Uploading asset ${assetPath} to release ${releaseId}`);
-            console.log(`Release published: https://github.com/${owner}/${repo}/releases/tag/${releaseId}`);
-            release = await github.rest.repos.updateRelease({
-              owner,
-              repo,
-              release_id: releaseId,
-              draft: false,
-            });
-            await github.rest.repos.uploadReleaseAsset({
-              owner,
-              repo,
-              release_id: releaseId,
-              name: assetName,
-              data,
-            });
-            console.log('Asset uploaded');
