@@ -151,5 +151,5 @@ export default [...fixupConfigRules(compat.extends(
   },
 }, {
   // UI Components are copied from shadcn/ui and are not linted
-  ignores: ['src/react/client/components/ui/**'],
+  ignores: ['src/react/client/components/ui/**', '.github/**'],
 }]
