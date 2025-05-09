@@ -1,3 +1,5 @@
+import { CHANGELOG_VERSION } from '@sx/constants'
+
 import InstalledDetails = chrome.runtime.InstalledDetails
 
 
@@ -31,10 +33,10 @@ function onInstallAndUpdate(details: InstalledDetails): void {
     InstallAndUpdate.onInstall()
   }
   else if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
-    const changelogVersion = process.env.CHANGELOG_VERSION
+    const changelogVersion = CHANGELOG_VERSION
     const currentVersion = process.env.VERSION
 
-    if (isValidVersion(changelogVersion!) && changelogVersion === currentVersion) {
+    if (isValidVersion(changelogVersion) && changelogVersion === currentVersion) {
       InstallAndUpdate.onUpdate().catch((e) => {
         console.error('Error updating:', e)
       })

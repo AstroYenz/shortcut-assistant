@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {chrome} from 'jest-chrome'
+import { chrome } from 'jest-chrome'
+import '@testing-library/jest-dom'
 
 
 beforeEach(() => {

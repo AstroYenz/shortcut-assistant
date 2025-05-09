@@ -1,0 +1,28 @@
+---
+description: 
+globs: *.test*
+alwaysApply: false
+---
+### Advanced Mocking
+- Use jest.mock() for mocking dependencies and place these at the top of the file
+- Create helper constants for typed mocks using:
+  ```typescript
+  const mockFunction = jest.mocked(someFunction)
+  ```
+- Set up default mock implementations in beforeEach
+- Prefer specific mock return values in each test over default implementations where appropriate
+- Avoid using `.mockImplementation()` when `.mockReturnValue()` will suffice
+- For fetch or API calls, mock both the response and status code where relevant:
+  ```typescript
+  const mockResponse = {
+    ok: true,
+    status: 200,
+    json: jest.fn().mockResolvedValue({ data: 'mocked data' })
+  }
+  global.fetch = jest.fn().mockResolvedValue(mockResponse)
+  ```
+- When testing error scenarios, remember to mock rejection cases:
+  ```typescript
+  mockFetch.mockRejectedValueOnce(new Error('Network error'))
+  ```
+- When asserting calls to mocks, prefer `toHaveBeenCalledWith` over `toHaveBeenCalled` when possible

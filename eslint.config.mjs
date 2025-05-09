@@ -105,8 +105,8 @@ export default [...fixupConfigRules(compat.extends(
     '@typescript-eslint/no-unsafe-argument': 'off',
 
     '@typescript-eslint/no-unused-vars': ['error', {
-      varsIgnorePattern: '^_$',
-      argsIgnorePattern: '^_$',
+      varsIgnorePattern: '^_',
+      argsIgnorePattern: '^_',
     }],
 
     'padding-line-between-statements': ['error', {
@@ -147,5 +147,9 @@ export default [...fixupConfigRules(compat.extends(
 
   rules: {
     'no-magic-numbers': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
   },
+}, {
+  // UI Components are copied from shadcn/ui and are not linted
+  ignores: ['src/react/client/components/ui/**'],
 }]

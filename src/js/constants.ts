@@ -1,0 +1,3 @@
+const CHANGELOG_VERSION = '3.0.1'
+
+export { CHANGELOG_VERSION }

@@ -1,0 +1,7 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- `@/` is an alias for `src/react` and `@sx/` is an alias for `src/js`
+- Do not use relative paths for imports

@@ -16,6 +16,7 @@ permissions:
 jobs:
   prepare-release-assets:
     runs-on: ubuntu-latest
+    environment: production
     outputs:
       upload_url: ${{ steps.draft_release.outputs.upload_url }}
       release_id: ${{ steps.draft_release.outputs.release_id }}
@@ -36,6 +37,14 @@ jobs:
         run: | 
          echo "VERSION=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
          echo GOOGLE_ANALYTICS_API_SECRET=${{ secrets.GOOGLE_ANALYTICS_API_SECRET }} >> .env
+      
+      - name: Populate environment variables
+        run: |
+          # Get all secrets and add them to .env
+          for secret in $(echo '${{ toJSON(secrets) }}' | jq -r 'keys[]'); do
+            value=$(echo '${{ toJSON(secrets) }}' | jq -r --arg key "$secret" '.[$key]')
+            echo "${secret}=${value}" >> .env
+          done
 
       - name: Build and zip the extension
         run: |

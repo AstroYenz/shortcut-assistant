@@ -16,6 +16,9 @@ async function registerUser(googleToken: string, shortcutToken: string): Promise
   }
   const data = await response.json()
   await chrome.storage.local.set({ backendKey: data.key })
+
+  // Clear the temporary Google token after successful registration
+  await chrome.storage.local.remove('tempGoogleToken')
 }
 
 export default registerUser
