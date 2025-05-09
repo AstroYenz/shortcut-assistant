@@ -66,6 +66,3 @@ describe('Drawers', function testDrawersSuite() {
     expect(true).toBe(true)
   })
 })
-
-// Named export to comply with codebase rules
-export { }

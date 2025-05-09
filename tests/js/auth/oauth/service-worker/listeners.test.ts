@@ -272,12 +272,12 @@ describe('Auth Service Worker Listeners', () => {
 
     it('handles errors when storing token', async () => {
       // Mock successful Google auth token generation
-      mockGetAuthToken.mockImplementation((options, callback) => {
+      mockGetAuthToken.mockImplementation((_options, callback) => {
         callback('google-token')
       })
 
       // Mock storage.set to throw error
-      mockStorageSet.mockImplementationOnce((data, callback) => {
+      mockStorageSet.mockImplementationOnce((_data, _callback) => {
         return Promise.reject(new Error('Storage error'))
       })
 

@@ -105,8 +105,8 @@ export default [...fixupConfigRules(compat.extends(
     '@typescript-eslint/no-unsafe-argument': 'off',
 
     '@typescript-eslint/no-unused-vars': ['error', {
-      varsIgnorePattern: '^_$',
-      argsIgnorePattern: '^_$',
+      varsIgnorePattern: '^_',
+      argsIgnorePattern: '^_',
     }],
 
     'padding-line-between-statements': ['error', {

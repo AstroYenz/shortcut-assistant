@@ -42,5 +42,3 @@ describe('FAB', function testFABSuite() {
   })
 })
 
-// Named export for FAB to comply with codebase rules
-export { } // Ensures this is a module
