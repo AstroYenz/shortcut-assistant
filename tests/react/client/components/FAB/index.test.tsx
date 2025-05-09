@@ -18,12 +18,12 @@ describe('FAB', function testFABSuite() {
 
   it('renders the FAB button', function testRendersFabButton() {
     setup()
-    expect(screen.getByRole('button', { name: /\+/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })).toBeInTheDocument()
   })
 
   it('toggles the menu when FAB button is clicked', function testToggleMenu() {
     setup()
-    const fabButton = screen.getByRole('button', { name: /\+/ })
+    const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
     fireEvent.click(fabButton)
     expect(screen.getByText('Analyze')).toBeInTheDocument()
     fireEvent.click(fabButton)
@@ -32,7 +32,7 @@ describe('FAB', function testFABSuite() {
 
   it('opens settings drawer when settings button is clicked', function testOpenSettingsDrawer() {
     setup()
-    const fabButton = screen.getByRole('button', { name: /\+/ })
+    const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
     fireEvent.click(fabButton)
     const settingsButtons = screen.getAllByRole('button')
     // The last button in the menu is the settings button

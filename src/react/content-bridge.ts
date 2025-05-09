@@ -1,5 +1,3 @@
-import { logError } from '@sx/utils/log-error'
-
 /**
  * Handles messages from the React page script to content script
  * Sets up message listeners and provides handlers for React communication
@@ -16,46 +14,47 @@ function setupReactMessageListener(): void {
 
     const payload = message.message
 
-    // Handle different actions
+    // Handle different actions based on the payload action
     if (payload?.action === 'submitShortcutApiToken') {
-      handleSubmitShortcutApiToken(payload.data.token)
-        .then((response) => {
-          window.postMessage({
-            type: 'FROM_CONTENT',
-            response
-          }, '*')
-        })
-        .catch((error) => {
-          window.postMessage({
-            type: 'FROM_CONTENT',
-            response: {
-              success: false,
-              error: error.message || 'Failed to submit API token'
-            }
-          }, '*')
-        })
+      handleMessageAction(
+        () => handleSubmitShortcutApiToken(payload.data.token),
+        'Failed to submit API token'
+      )
     }
-    if (payload?.action === 'initiateGoogleOAuth') {
-      handleInitiateGoogleOAuth()
-        .then((response) => {
-          window.postMessage({
-            type: 'FROM_CONTENT',
-            response
-          }, '*')
-        })
-        .catch((error) => {
-          window.postMessage({
-            type: 'FROM_CONTENT',
-            response: {
-              success: false,
-              error: error.message || 'Failed to authenticate with Google'
-            }
-          }, '*')
-        })
+    else if (payload?.action === 'initiateGoogleOAuth') {
+      handleMessageAction(
+        () => handleInitiateGoogleOAuth(),
+        'Failed to authenticate with Google'
+      )
     }
 
     // Other action handlers can be added here
   })
+
+  /**
+   * Handles a message action with standardized promise resolution and error handling
+   */
+  function handleMessageAction(
+    actionHandler: () => Promise<{ success: boolean, message: string, error?: string }>,
+    defaultErrorMessage: string
+  ): void {
+    actionHandler()
+      .then((response) => {
+        window.postMessage({
+          type: 'FROM_CONTENT',
+          response
+        }, '*')
+      })
+      .catch((error) => {
+        window.postMessage({
+          type: 'FROM_CONTENT',
+          response: {
+            success: false,
+            error: error.message || defaultErrorMessage
+          }
+        }, '*')
+      })
+  }
 }
 
 /**
@@ -116,23 +115,39 @@ async function handleInitiateGoogleOAuth(): Promise<{ success: boolean, message:
   }
 }
 
+// Flag to track if bridge is initialized
+let isBridgeInitialized = false
+
 /**
  * Initialize React components and set up message listeners
  */
 function initializeReactBridge(): void {
   try {
+    // Prevent duplicate initialization
+    if (isBridgeInitialized) {
+      return
+    }
+
     // Set up the message listener
     setupReactMessageListener()
 
     // Initialize React components
-    import('./index').then(({ initReact }) => {
-      initReact()
-    }).catch((err) => {
-      logError(err as Error)
-    })
+    import('./index')
+      .then(({ initReact }) => {
+        try {
+          initReact()
+          isBridgeInitialized = true
+        }
+        catch (error) {
+          console.error(error as Error)
+        }
+      })
+      .catch((err) => {
+        console.error(err as Error)
+      })
   }
   catch (e) {
-    logError(e as Error)
+    console.error(e as Error)
   }
 }
 
@@ -140,10 +155,13 @@ function initializeReactBridge(): void {
  * Clean up React components
  */
 function cleanupReactBridge(): void {
+  if (!isBridgeInitialized) return
+
   import('./index').then(({ unmountReact }) => {
     unmountReact()
+    isBridgeInitialized = false
   }).catch((err) => {
-    logError(err as Error)
+    console.error(err as Error)
   })
 }
 

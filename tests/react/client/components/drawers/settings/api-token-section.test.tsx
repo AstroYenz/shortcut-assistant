@@ -8,7 +8,7 @@ describe('ApiTokenSection', function testApiTokenSectionSuite() {
     apiKey: '',
     hasStoredToken: false,
     isSubmitting: false,
-    googleAuthStatus: 'success' as const,
+    googleAuthStatus: 'authenticated' as const,
     onApiKeyChange: jest.fn()
   }
 
@@ -49,14 +49,14 @@ describe('ApiTokenSection', function testApiTokenSectionSuite() {
     expect(input).toBeDisabled()
   })
 
-  it('disables input when googleAuthStatus is not success', function testDisablesInputWhenAuthNotSuccess() {
+  it('disables input when googleAuthStatus is not authenticated', function testDisablesInputWhenAuthNotSuccess() {
     setup({ googleAuthStatus: 'idle' })
     const input: HTMLInputElement = screen.getByPlaceholderText('Shortcut API Key')
     expect(input).toBeDisabled()
   })
 
-  it('enables input when googleAuthStatus is success and not submitting', function testEnablesInputWhenAuthSuccess() {
-    setup({ googleAuthStatus: 'success', isSubmitting: false })
+  it('enables input when googleAuthStatus is authenticated and not submitting', function testEnablesInputWhenAuthSuccess() {
+    setup({ googleAuthStatus: 'authenticated', isSubmitting: false })
     const input: HTMLInputElement = screen.getByPlaceholderText('Shortcut API Key')
     expect(input).not.toBeDisabled()
   })
@@ -80,7 +80,7 @@ describe('ApiTokenSection', function testApiTokenSectionSuite() {
     expect(screen.getByText('This token enables advanced AI features for Shortcut.')).toBeInTheDocument()
   })
 
-  it('shows authentication required message when googleAuthStatus is not success', function testAuthRequiredMessage() {
+  it('shows authentication required message when googleAuthStatus is not authenticated', function testAuthRequiredMessage() {
     setup({ googleAuthStatus: 'idle' })
     expect(screen.getByText('Please complete Google authentication first.')).toBeInTheDocument()
   })

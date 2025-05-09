@@ -8,10 +8,10 @@ jest.mock('@sx/utils/log-error')
 jest.mock('@sx/utils/get-states', () => ({
   __esModule: true, // This property tells Jest that we're mocking an ES module
   default: jest.fn().mockResolvedValue({
-    'Backlog': [],
-    'Unstarted': [],
-    'Started': [],
-    'Done': []
+    Backlog: [],
+    Unstarted: [],
+    Started: [],
+    Done: []
   }), // Mock the default export, which is the _getStates function
   ShortcutWorkflowStates: jest.requireActual('@sx/utils/get-states').ShortcutWorkflowStates // Optionally export actual types or constants if needed
 }))
@@ -32,12 +32,12 @@ global.chrome = {
   },
 }
 
-const states = { 'Backlog': [], 'Unstarted': [], 'Started': [], 'Done': [] }
+const states = { Backlog: [], Unstarted: [], Started: [], Done: [] }
 
 
 describe('Workspace', () => {
   it('should get states on activation', async () => {
-    const states = { 'Backlog': [], 'Unstarted': [], 'Started': [], 'Done': [] }
+    const states = { Backlog: [], Unstarted: [], Started: [], Done: [] }
     jest.spyOn(Workspace, 'states').mockResolvedValue(states)
     await Workspace.activate()
     expect(Workspace.states).toHaveBeenCalled()
@@ -74,17 +74,17 @@ describe('Workspace', () => {
   })
 
   it('should fetch states if they are not in storage', async () => {
-    const states = { 'Backlog': [], 'Unstarted': [], 'Started': [], 'Done': [] }
+    const states = { Backlog: [], Unstarted: [], Started: [], Done: [] }
     const getStorageSpy = jest.spyOn(chrome.storage.local, 'get')
     const setStorageSpy = jest.spyOn(chrome.storage.local, 'set')
     getStorageSpy.mockImplementation((key, callback) => {
       if (typeof callback !== 'function') {
-        return {states: states, stateRefreshDate: dayjs().add(1, 'day').format()}
+        return { states: states, stateRefreshDate: dayjs().add(1, 'day').format() }
       }
-      callback({states: states, stateRefreshDate: dayjs().add(1, 'day').format()})
+      callback({ states: states, stateRefreshDate: dayjs().add(1, 'day').format() })
     })
     const result = await Workspace.states(true)
     expect(result).toEqual(states)
-    expect(setStorageSpy).toHaveBeenCalledWith({states, stateRefreshDate: dayjs().add(1, 'week').format()})
+    expect(setStorageSpy).toHaveBeenCalledWith({ states, stateRefreshDate: dayjs().add(1, 'week').format() })
   })
 })

@@ -150,5 +150,6 @@ export default [...fixupConfigRules(compat.extends(
     '@typescript-eslint/explicit-function-return-type': 'off',
   },
 }, {
+  // UI Components are copied from shadcn/ui and are not linted
   ignores: ['src/react/client/components/ui/**'],
 }]

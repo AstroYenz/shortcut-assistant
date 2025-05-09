@@ -37,7 +37,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
     mockGet.mockImplementation((keys, callback) => {
       callback({})
     })
-    mockInitiateGoogleOAuth.mockResolvedValue({ success: true })
+    mockInitiateGoogleOAuth.mockResolvedValue({ success: true, data: {} })
   })
 
   it('renders with correct heading', function testRendersCorrectHeading() {
@@ -62,7 +62,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
     mockInitiateGoogleOAuth.mockImplementation(() => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve({ success: true })
+          resolve({ success: true, data: {} })
         }, 100)
       })
     })
@@ -96,7 +96,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
     expect(screen.getByRole('button')).toBeDisabled()
   })
 
-  it('calls onAuthStatusChange with success when authenticated with storage', function testCallsOnAuthStatusChangeSuccess() {
+  it('calls onAuthStatusChange with authenticated when authenticated with storage', function testCallsOnAuthStatusChangeSuccess() {
     // Mock chrome.storage.local.get to return a token
     mockGet.mockImplementation((keys, callback) => {
       callback({ tempGoogleToken: 'mock-token' })
@@ -104,7 +104,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
 
     setup()
 
-    expect(defaultProps.onAuthStatusChange).toHaveBeenCalledWith('success')
+    expect(defaultProps.onAuthStatusChange).toHaveBeenCalledWith('authenticated')
   })
 
   it('disables button when authenticating', async function testDisablesButtonWhenAuthenticating() {
@@ -114,7 +114,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
     mockInitiateGoogleOAuth.mockImplementation(() => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve({ success: true })
+          resolve({ success: true, data: {} })
         }, 100)
       })
     })
@@ -137,7 +137,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
   })
 
   it('applies error styling when authentication fails', async function testAppliesErrorStyling() {
-    mockInitiateGoogleOAuth.mockResolvedValue({ success: false, error: 'Auth failed' })
+    mockInitiateGoogleOAuth.mockResolvedValue({ success: false, data: { error: 'Auth failed' } })
 
     setup()
 
@@ -169,7 +169,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
     expect(defaultProps.onAuthStatusChange).toHaveBeenCalledWith('loading')
 
     await waitFor(() => {
-      expect(defaultProps.onAuthStatusChange).toHaveBeenCalledWith('success')
+      expect(defaultProps.onAuthStatusChange).toHaveBeenCalledWith('authenticated')
     })
   })
 })

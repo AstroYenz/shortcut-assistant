@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { AuthStatus } from '@/client/components/drawers/settings/google-auth-section'
 import { Input } from '@/client/components/ui/input'
 
 
@@ -7,7 +8,7 @@ export type ApiTokenSectionProps = {
   apiKey: string
   hasStoredToken: boolean
   isSubmitting: boolean
-  googleAuthStatus: 'idle' | 'loading' | 'success' | 'error'
+  googleAuthStatus: AuthStatus
   onApiKeyChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -27,12 +28,12 @@ function ApiTokenSection({
           placeholder={hasStoredToken ? '••••••••••••••••••' : 'Shortcut API Key'}
           value={apiKey}
           onChange={onApiKeyChange}
-          disabled={isSubmitting || googleAuthStatus !== 'success'}
+          disabled={isSubmitting || googleAuthStatus !== 'authenticated'}
           type="password"
         />
       </div>
       <p className="text-gray-400 text-xs">
-        {googleAuthStatus !== 'success'
+        {googleAuthStatus !== 'authenticated'
           ? 'Please complete Google authentication first.'
           : hasStoredToken
             ? 'API token saved. Enter a new token to update.'

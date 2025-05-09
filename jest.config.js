@@ -19,5 +19,5 @@ module.exports = {
     '^.+\\.jsx?$': 'babel-jest'
   },
   roots: ['<rootDir>/src', '<rootDir>/tests'],
-  testMatch: ['**/?(*.)+(spec|test).(js|ts|tsx)']
+  testMatch: ['**/?(*.)+(test).(js|ts|tsx)']
 }

@@ -40,7 +40,17 @@ If you're looking to install the extension, visit the [Chrome Web Store](https:/
    ```bash
     cp .env.example .env
     ```
-All variables are stored in Doppler and are synced to Github for use in the release workflow.
+4. Install Doppler CLI  
+   ```bash
+   brew install doppler/tap/doppler-cli  
+   ```
+
+5. Authenticate and set project/config  
+   ```bash
+   doppler login  
+   doppler setup --project shortcut-assistant --config dev  
+   ```
+
 
 ### Running the Extension Locally
 

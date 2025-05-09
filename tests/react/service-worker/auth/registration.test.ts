@@ -4,6 +4,7 @@ import { registerUser } from '@/service-worker/auth/registration'
 describe('registerUser', () => {
   const originalFetch = global.fetch
   const originalEnv = process.env
+  const originalAbortController = global.AbortController
 
   beforeEach(() => {
     global.fetch = jest.fn()
@@ -12,10 +13,17 @@ describe('registerUser', () => {
     // Setup chrome storage mock
     chrome.storage.local.set = jest.fn().mockResolvedValue({})
     chrome.storage.local.remove = jest.fn().mockResolvedValue({})
+
+    // Mock AbortController
+    global.AbortController = jest.fn().mockImplementation(() => ({
+      abort: jest.fn(),
+      signal: {} // Mock signal without implementation details
+    }))
   })
 
   afterEach(() => {
     global.fetch = originalFetch
+    global.AbortController = originalAbortController
     process.env = originalEnv
     jest.resetAllMocks()
   })
@@ -38,10 +46,10 @@ describe('registerUser', () => {
     // Act
     await registerUser(googleToken, shortcutToken)
 
-    // Assert
+    // Assert - we don't test specific signal properties, just verify the function parameters
     expect(fetchMock).toHaveBeenCalledWith(
       `${process.env.PROXY_URL}/users/register`,
-      {
+      expect.objectContaining({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,8 +58,8 @@ describe('registerUser', () => {
         body: JSON.stringify({
           shortcutApiToken: shortcutToken,
           googleAuthToken: googleToken,
-        }),
-      }
+        })
+      })
     )
 
     expect(chrome.storage.local.set).toHaveBeenCalledWith({ backendKey })

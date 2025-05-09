@@ -30,6 +30,11 @@ function FAB(): React.ReactElement {
         <button
           className={`shortcut-assistant-fab-button ${isOpen ? 'open' : ''}`}
           onClick={handleToggle}
+          aria-label="Toggle Shortcut Assistant"
+          title="Toggle Shortcut Assistant"
+          name="Toggle Shortcut Assistant"
+          aria-expanded={isOpen}
+          type="button"
         >
           <span className="shortcut-assistant-fab-icon">+</span>
         </button>
@@ -42,6 +47,10 @@ function FAB(): React.ReactElement {
             <button
               className="shortcut-assistant-fab-menu-item"
               onClick={handleOpenSettings}
+              aria-label="Open Settings"
+              title="Open Settings"
+              name="Open Settings"
+              type="button"
             >
               <Settings />
             </button>

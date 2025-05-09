@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react'
 
 import { submitShortcutApiToken } from '@/bridge'
 import { ApiTokenSection } from '@/client/components/drawers/settings/api-token-section'
-import { GoogleAuthSection } from '@/client/components/drawers/settings/google-auth-section'
+import { AuthStatus, GoogleAuthSection } from '@/client/components/drawers/settings/google-auth-section'
 import { Button } from '@/client/components/ui/button'
 import { Drawer, DrawerContent, DrawerFooter } from '@/client/components/ui/drawer'
+import { cn } from '@/client/lib/utils'
 
 
 const STATUS_RESET_DELAY_MS = 3000
 
-type Status = 'idle' | 'loading' | 'success' | 'error'
+type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface SettingsProps {
   open: boolean
@@ -21,8 +22,8 @@ function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
   const [apiKey, setApiKey] = useState('')
   const [hasStoredToken, setHasStoredToken] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<Status>('idle')
-  const [googleAuthStatus, setGoogleAuthStatus] = useState<Status>('idle')
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle')
+  const [googleAuthStatus, setGoogleAuthStatus] = useState<AuthStatus>('idle')
 
   useEffect(() => {
     setShowSettings(open)
@@ -48,7 +49,7 @@ function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
     setApiKey(event.target.value)
   }
 
-  function handleAuthStatusChange(status: Status): void {
+  function handleAuthStatusChange(status: AuthStatus): void {
     setGoogleAuthStatus(status)
   }
 
@@ -65,25 +66,43 @@ function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
         setSubmitStatus('success')
         setApiKey('')
         setHasStoredToken(true)
+        // Reset the button text after a delay, ie. from 'Saved!' to 'Update API Token'
         setTimeout(() => {
           setSubmitStatus('idle')
         }, STATUS_RESET_DELAY_MS)
       }
       else {
-        console.error('Error submitting API token:', response.error)
+        console.error('Error submitting API token:', response.data.error)
         setSubmitStatus('error')
+        // Reset the error state after the same delay as success
+        setTimeout(() => {
+          setSubmitStatus('idle')
+        }, STATUS_RESET_DELAY_MS)
       }
     }
     catch (error) {
       console.error('Error submitting API token:', error)
       setSubmitStatus('error')
+      // Reset the error state after the same delay as success
+      setTimeout(() => {
+        setSubmitStatus('idle')
+      }, STATUS_RESET_DELAY_MS)
     }
     finally {
       setIsSubmitting(false)
     }
   }
 
-  const buttonText = isSubmitting ? 'Submitting...' : submitStatus === 'success' ? 'Saved!' : submitStatus === 'error' ? 'Error' : hasStoredToken ? 'Update API Token' : 'Save API Token'
+  type ButtonText = 'Submitting...' | 'Saved!' | 'Error' | 'Update API Token' | 'Save API Token'
+
+  const getButtonText = (): ButtonText => {
+    if (isSubmitting) return 'Submitting...'
+    if (submitStatus === 'success') return 'Saved!'
+    if (submitStatus === 'error') return 'Error'
+    return hasStoredToken ? 'Update API Token' : 'Save API Token'
+  }
+
+  const buttonText = getButtonText()
 
   return (
     <Drawer open={showSettings} onOpenChange={handleOpenChange}>
@@ -104,8 +123,11 @@ function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
           <DrawerFooter>
             <Button
               onClick={handleSubmit}
-              disabled={isSubmitting || !apiKey.trim() || googleAuthStatus !== 'success'}
-              className={submitStatus === 'success' ? 'bg-green-600' : submitStatus === 'error' ? 'bg-red-600' : ''}
+              disabled={isSubmitting || !apiKey.trim() || googleAuthStatus !== 'authenticated'}
+              className={cn({
+                'bg-green-600': submitStatus === 'success',
+                'bg-red-600': submitStatus === 'error'
+              })}
             >
               {buttonText}
             </Button>

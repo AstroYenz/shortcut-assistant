@@ -1,80 +1,75 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 
 import { initiateGoogleOAuth } from '@/bridge'
 import { Button } from '@/client/components/ui/button'
 
 
-type Status = 'idle' | 'loading' | 'success' | 'error'
+type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'error'
 
 export type GoogleAuthSectionProps = {
-  onAuthStatusChange?: (status: Status) => void
+  onAuthStatusChange?: (status: AuthStatus) => void
 }
 
 function GoogleAuthSection({ onAuthStatusChange }: GoogleAuthSectionProps): React.ReactElement {
-  const [googleAuthStatus, setGoogleAuthStatus] = useState<Status>('idle')
-  const [isAuthenticatingWithGoogle, setIsAuthenticatingWithGoogle] = useState(false)
+  const [authStatus, setAuthStatus] = useState<AuthStatus>('idle')
+
+  const updateAuthStatus = useCallback((status: AuthStatus, errorMessage?: unknown): void => {
+    setAuthStatus(status)
+    if (onAuthStatusChange) {
+      onAuthStatusChange(status)
+    }
+    if (errorMessage) {
+      console.error('Error authenticating with Google:', errorMessage)
+    }
+  }, [onAuthStatusChange])
 
   useEffect(() => {
     // Check if Google auth has been completed already
     chrome.storage.local.get(['tempGoogleToken', 'backendKey'], (data) => {
       if (data.tempGoogleToken || data.backendKey) {
-        setGoogleAuthStatus('success')
-        if (onAuthStatusChange) {
-          onAuthStatusChange('success')
-        }
+        updateAuthStatus('authenticated')
       }
     })
-  }, [onAuthStatusChange])
+  }, [updateAuthStatus])
 
   async function handleGoogleAuth(): Promise<void> {
-    setIsAuthenticatingWithGoogle(true)
-    setGoogleAuthStatus('loading')
-
-    if (onAuthStatusChange) {
-      onAuthStatusChange('loading')
-    }
+    updateAuthStatus('loading')
 
     try {
       const response = await initiateGoogleOAuth()
 
       if (response.success) {
-        setGoogleAuthStatus('success')
-        if (onAuthStatusChange) {
-          onAuthStatusChange('success')
-        }
+        updateAuthStatus('authenticated')
       }
       else {
-        console.error('Error authenticating with Google:', response.error)
-        setGoogleAuthStatus('error')
-        if (onAuthStatusChange) {
-          onAuthStatusChange('error')
-        }
+        updateAuthStatus('error', response.data.error)
       }
     }
     catch (error) {
-      console.error('Error authenticating with Google:', error)
-      setGoogleAuthStatus('error')
-      if (onAuthStatusChange) {
-        onAuthStatusChange('error')
-      }
-    }
-    finally {
-      setIsAuthenticatingWithGoogle(false)
+      updateAuthStatus('error', error)
     }
   }
 
-  const buttonText = isAuthenticatingWithGoogle ? 'Authenticating...' : googleAuthStatus === 'success' ? 'Authenticated with Google' : 'Login with Google'
+  type ButtonText = 'Authenticating...' | 'Authenticated with Google' | 'Login with Google'
+
+  const getButtonText = (): ButtonText => {
+    if (authStatus === 'loading') return 'Authenticating...'
+    if (authStatus === 'authenticated') return 'Authenticated with Google'
+    return 'Login with Google'
+  }
+
+  const buttonText = getButtonText()
 
   return (
     <div className="space-y-4">
       <h3 className="font-medium text-sm">Step 1: Authenticate with Google</h3>
       <Button
         onClick={handleGoogleAuth}
-        disabled={isAuthenticatingWithGoogle || googleAuthStatus === 'success'}
+        disabled={authStatus === 'loading' || authStatus === 'authenticated'}
         className={
-          googleAuthStatus === 'success'
+          authStatus === 'authenticated'
             ? 'bg-green-600'
-            : googleAuthStatus === 'error' ? 'bg-red-600' : ''
+            : authStatus === 'error' ? 'bg-red-600' : ''
         }
       >
         {buttonText}
@@ -87,3 +82,4 @@ function GoogleAuthSection({ onAuthStatusChange }: GoogleAuthSectionProps): Reac
 }
 
 export { GoogleAuthSection }
+export type { AuthStatus }

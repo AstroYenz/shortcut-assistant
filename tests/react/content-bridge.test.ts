@@ -1,5 +1,3 @@
-import { logError } from '@sx/utils/log-error'
-
 import {
   initializeReactBridge,
   cleanupReactBridge,
@@ -8,8 +6,6 @@ import {
   handleInitiateGoogleOAuth
 } from '@/content-bridge'
 
-// Mock the dependencies
-jest.mock('@sx/utils/log-error')
 jest.mock('@/index', () => ({
   initReact: jest.fn(),
   unmountReact: jest.fn()
@@ -19,8 +15,6 @@ describe('Content Bridge', () => {
   let originalAddEventListener: typeof window.addEventListener
   let originalPostMessage: typeof window.postMessage
   let messageHandler: ((event: MessageEvent) => void) | undefined
-
-  const mockLogError = jest.mocked(logError)
 
   beforeEach(() => {
     originalAddEventListener = window.addEventListener
@@ -297,47 +291,6 @@ describe('Content Bridge', () => {
 
       // Verify the React initialization was called
       expect(mockImport.initReact).toHaveBeenCalled()
-
-      // Restore the original import
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore - restore original
-      global.import = originalImport
-    })
-
-    it('logs error when initialization fails', async () => {
-      const error = new Error('React initialization failed')
-      const mockImport = jest.requireMock('@/index')
-
-      // Setup the mock to throw
-      mockImport.initReact.mockImplementation(() => {
-        throw error
-      })
-
-      // Create a mock for the dynamic import
-      const mockDynamicImport = jest.fn().mockResolvedValue({
-        initReact: mockImport.initReact,
-        unmountReact: mockImport.unmountReact
-      })
-
-      // Replace the dynamic import function
-      const originalImport = jest.fn()
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore - mock dynamic import
-      global.import = originalImport
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore - mock dynamic import
-      global.import = mockDynamicImport
-
-      // Call the function
-      initializeReactBridge()
-
-      // Wait for the promise chain to complete
-      await Promise.resolve()
-      await Promise.resolve()
-      await new Promise(process.nextTick)
-
-      // Verify the error was logged
-      expect(mockLogError).toHaveBeenCalledWith(error)
 
       // Restore the original import
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

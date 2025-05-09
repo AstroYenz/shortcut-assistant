@@ -16,7 +16,7 @@ jest.mock('@/client/components/drawers/settings/google-auth-section', () => ({
         <h3>Step 1: Authenticate with Google</h3>
         <button
           data-testid="mock-google-auth-button"
-          onClick={() => onAuthStatusChange && onAuthStatusChange('success')}
+          onClick={() => onAuthStatusChange && onAuthStatusChange('authenticated')}
         >
           Mocked Google Auth Button
         </button>
@@ -64,7 +64,7 @@ describe('Settings component', function testSettingsComponentSuite() {
       return {}
     })
 
-    mockSubmitShortcutApiToken.mockResolvedValue({ success: true })
+    mockSubmitShortcutApiToken.mockResolvedValue({ success: true, data: {} })
   })
 
   afterEach(() => {
@@ -134,7 +134,7 @@ describe('Settings component', function testSettingsComponentSuite() {
     const input = screen.getByPlaceholderText('Shortcut API Key')
     fireEvent.change(input, { target: { value: 'test-api-key' } })
 
-    // Button should still be disabled because Google auth status is not success
+    // Button should still be disabled because Google auth status is not authenticated
     const submitButton = screen.getByRole('button', { name: /save api token/i })
     expect(submitButton).toBeDisabled()
   })
@@ -166,7 +166,7 @@ describe('Settings component', function testSettingsComponentSuite() {
 
   describe('API token submission', function testApiTokenSubmission() {
     it('submits API token when button is clicked', async function testSubmitsApiToken() {
-      mockSubmitShortcutApiToken.mockResolvedValue({ success: true })
+      mockSubmitShortcutApiToken.mockResolvedValue({ success: true, data: {} })
 
       setup()
 
@@ -197,7 +197,7 @@ describe('Settings component', function testSettingsComponentSuite() {
     })
 
     it('handles error in API token submission', async function testHandlesApiTokenError() {
-      mockSubmitShortcutApiToken.mockResolvedValue({ success: false, error: 'API error' })
+      mockSubmitShortcutApiToken.mockResolvedValue({ success: false, data: { error: 'API error' } })
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
 
       setup()
@@ -230,7 +230,7 @@ describe('Settings component', function testSettingsComponentSuite() {
     })
 
     it('resets submit status after the defined delay period', async function testResetsSubmitStatusAfterDelay() {
-      mockSubmitShortcutApiToken.mockResolvedValue({ success: true })
+      mockSubmitShortcutApiToken.mockResolvedValue({ success: true, data: {} })
 
       setup()
 

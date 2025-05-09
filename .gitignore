@@ -7,4 +7,3 @@ node_modules/
 src/styles/output.css
 **/*.env
 **/.DS_Store
-*.env
