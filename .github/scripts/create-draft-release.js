@@ -16,7 +16,7 @@ module.exports = async ({ github, context, core }) => {
   
   if (!draftRelease) {
     console.log(`Creating draft release`);
-    draftRelease = await github.rest.repos.createRelease({
+    const result = await github.rest.repos.createRelease({
       owner,
       repo,
       tag_name: releaseTag,
@@ -24,20 +24,29 @@ module.exports = async ({ github, context, core }) => {
       body: releaseNotes,
       draft: true,
     });
+    draftRelease = result.data;
     console.log(`Draft release created`);
   } else {
     console.log(`Updating existing draft release`);
-    draftRelease = await github.rest.repos.updateRelease({
+    const result = await github.rest.repos.updateRelease({
       owner,
       repo,
       release_id: draftRelease.id,
       body: releaseNotes,
       draft: true,
     });
+    draftRelease = result.data;
     console.log(`Draft release updated`);
   }
   
   console.log(`Draft release ID: ${draftRelease.id}`);
+  console.log(`Draft release upload URL: ${draftRelease.upload_url}`);
   core.setOutput("upload_url", draftRelease.upload_url);
   core.setOutput("release_id", draftRelease.id);
+  
+  // Log the output to make debugging easier
+  console.log("Setting outputs:", {
+    upload_url: draftRelease.upload_url,
+    release_id: draftRelease.id
+  });
 }; 
