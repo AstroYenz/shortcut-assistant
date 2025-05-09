@@ -4,10 +4,6 @@ import { registerUser } from '@/service-worker/auth/registration'
 
 
 chrome.runtime.onMessage.addListener((request: IpcRequest, sender, sendResponse) => {
-  if (request.action === 'saveUserToken') {
-    registerUser(request.data.googleToken, request.data.shortcutToken)
-  }
-
   // Handle the processShortcutApiToken action from content script
   if (request.action === 'processShortcutApiToken') {
     handleProcessShortcutApiToken(request.data.shortcutToken, sendResponse)
