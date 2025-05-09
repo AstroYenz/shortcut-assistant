@@ -2,13 +2,8 @@
 const path = require('path')
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const webpack = require('webpack')
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const baseConfig = require('./webpack.config.base')
 
-// Feature flag for React support
-const enableReactInBuild = process.env.ENABLE_REACT === 'true'
 
 module.exports = {
 
@@ -34,7 +29,7 @@ module.exports = {
       './src/js/additional-content/content-script.ts',
     ],
     'js/analytics/bundle': './src/js/analytics/event.ts',
-    ...(enableReactInBuild ? { 'js/react/bundle': './src/react/index.tsx' } : {})
+    'js/react/bundle': './src/react/index.tsx'
   },
 
   output: {
@@ -58,23 +53,18 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       }
     ]
   },
   resolve: {
     alias: {
-      '@sx': [
-        path.resolve(__dirname, './src/js/'),
-        path.resolve(__dirname, './src/react/')
-      ]
+      '@sx': path.resolve(__dirname, './src/js/'),
+      '@': path.resolve(__dirname, './src/react/')
     },
     extensions: ['.tsx', '.ts', '.js', '.jsx']
   },
   plugins: [
     ...baseConfig.plugins,
-    new webpack.DefinePlugin({
-      'process.env.ENABLE_REACT': JSON.stringify(enableReactInBuild)
-    })
   ]
 }

@@ -3,6 +3,8 @@ import { AiFunctions } from '@sx/analyze/ai-functions'
 import { logError } from '@sx/utils/log-error'
 import { Story } from '@sx/utils/story'
 
+import { initializeReactBridge, cleanupReactBridge } from '../react/content-bridge'
+
 import { analyzeStoryDescription } from './analyze/analyze-story-description'
 import { CycleTime } from './cycle-time/cycle-time'
 import { DevelopmentTime } from './development-time/development-time'
@@ -10,7 +12,6 @@ import changeIteration from './keyboard-shortcuts/change-iteration'
 import changeState from './keyboard-shortcuts/change-state'
 import { KeyboardShortcuts } from './keyboard-shortcuts/keyboard-shortcuts'
 import { NotesButton } from './notes/notes-button'
-import { initializeReact, cleanupReact } from './react-bridge'
 import { Todoist } from './todoist/todoist'
 import { getSyncedSetting } from './utils/get-synced-setting'
 
@@ -44,7 +45,7 @@ export async function activate(): Promise<void> {
   // Initialize React components if compiled into the build
   if (isReactEnabled) {
     try {
-      initializeReact()
+      initializeReactBridge()
     }
     catch (e) {
       logError(e as Error)
@@ -77,8 +78,8 @@ export async function handleMessage(request: { message: string, url: string }): 
     const isReactEnabled = process.env.ENABLE_REACT === 'true'
     // Re-initialize React components if compiled into the build
     if (isReactEnabled) {
-      cleanupReact()
-      initializeReact()
+      cleanupReactBridge()
+      initializeReactBridge()
     }
   }
   if (request.message === 'change-state') {

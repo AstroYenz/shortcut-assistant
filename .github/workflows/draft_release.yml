@@ -41,9 +41,9 @@ jobs:
       - name: Populate environment variables
         run: |
           # Get all secrets and add them to .env
-          for var in $(echo '${{ toJSON(vars) }}' | jq -r 'keys[]'); do
-            value=$(echo '${{ toJSON(vars) }}' | jq -r --arg key "$var" '.[$key]')
-            echo "${var}=${value}" >> .env
+          for secret in $(echo '${{ toJSON(secrets) }}' | jq -r 'keys[]'); do
+            value=$(echo '${{ toJSON(secrets) }}' | jq -r --arg key "$secret" '.[$key]')
+            echo "${secret}=${value}" >> .env
           done
 
       - name: Build and zip the extension

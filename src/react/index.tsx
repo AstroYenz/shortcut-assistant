@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot, Root } from 'react-dom/client'
 
-import FAB from './components/FAB'
+import FAB from '@/client/components/FAB'
 
 // Store the React root instance for proper cleanup
 let fabRoot: Root | undefined
@@ -10,6 +10,7 @@ let fabRoot: Root | undefined
  * Initialize React application and mount the FAB component
  */
 export function initReact(): void {
+  document.documentElement.classList.add('dark')
   // Check if FAB container already exists
   let container = document.getElementById('shortcut-assistant-fab-container')
   // Create container if it doesn't exist
