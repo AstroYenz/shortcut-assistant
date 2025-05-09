@@ -70,7 +70,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const createDraftRelease = require('./.github/scripts/create-draft-release.js');
-            return await createDraftRelease({ github, context, core });
+            await createDraftRelease({ github, context, core });
 
   upload-release-asset:
     needs: prepare-release-assets
@@ -116,5 +116,5 @@ jobs:
               github, 
               context, 
               core, 
-              releaseId: ${{ needs.prepare-release-assets.outputs.release_id }} 
+              releaseId: ${{ needs.prepare-release-assets.outputs.release_id }}
             });
