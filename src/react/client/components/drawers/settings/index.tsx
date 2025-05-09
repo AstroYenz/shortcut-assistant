@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import { initiateGoogleOAuth, submitShortcutApiToken } from '@/bridge'
-import { ApiTokenSection } from '@/client/components/drawers/settings/ApiTokenSection'
-import { GoogleAuthSection } from '@/client/components/drawers/settings/GoogleAuthSection'
+import { submitShortcutApiToken } from '@/bridge'
+import { ApiTokenSection } from '@/client/components/drawers/settings/api-token-section'
+import { GoogleAuthSection } from '@/client/components/drawers/settings/google-auth-section'
 import { Button } from '@/client/components/ui/button'
 import { Drawer, DrawerContent, DrawerFooter } from '@/client/components/ui/drawer'
 
@@ -23,20 +23,15 @@ function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<Status>('idle')
   const [googleAuthStatus, setGoogleAuthStatus] = useState<Status>('idle')
-  const [isAuthenticatingWithGoogle, setIsAuthenticatingWithGoogle] = useState(false)
 
   useEffect(() => {
     setShowSettings(open)
   }, [open])
 
   useEffect(() => {
-    // Check if Google auth has been completed already
-    chrome.storage.local.get(['tempGoogleToken', 'backendKey'], (data) => {
-      if (data.tempGoogleToken) {
-        setGoogleAuthStatus('success')
-      }
+    // Check if we have a stored API token
+    chrome.storage.local.get(['backendKey'], (data) => {
       if (data.backendKey) {
-        setGoogleAuthStatus('success')
         setHasStoredToken(true)
       }
     })
@@ -53,31 +48,8 @@ function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
     setApiKey(event.target.value)
   }
 
-  async function handleGoogleAuth(): Promise<void> {
-    setIsAuthenticatingWithGoogle(true)
-    setGoogleAuthStatus('loading')
-
-    try {
-      const response = await initiateGoogleOAuth()
-
-      if (response.success) {
-        setGoogleAuthStatus('success')
-        setTimeout(() => {
-          setGoogleAuthStatus('success')
-        }, STATUS_RESET_DELAY_MS)
-      }
-      else {
-        console.error('Error authenticating with Google:', response.error)
-        setGoogleAuthStatus('error')
-      }
-    }
-    catch (error) {
-      console.error('Error authenticating with Google:', error)
-      setGoogleAuthStatus('error')
-    }
-    finally {
-      setIsAuthenticatingWithGoogle(false)
-    }
+  function handleAuthStatusChange(status: Status): void {
+    setGoogleAuthStatus(status)
   }
 
   async function handleSubmit(): Promise<void> {
@@ -119,9 +91,7 @@ function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
         <div className="mx-auto w-full max-w-lg p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <GoogleAuthSection
-              googleAuthStatus={googleAuthStatus}
-              isAuthenticatingWithGoogle={isAuthenticatingWithGoogle}
-              onGoogleAuth={handleGoogleAuth}
+              onAuthStatusChange={handleAuthStatusChange}
             />
             <ApiTokenSection
               apiKey={apiKey}

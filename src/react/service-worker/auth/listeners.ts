@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener((request: IpcRequest, sender, sendResponse)
  * Process the Shortcut API token by getting the Google auth token
  * and then registering the user with both tokens
  */
-function handleProcessShortcutApiToken(shortcutToken: string, sendResponse: (response?: any) => void): void {
+function handleProcessShortcutApiToken(shortcutToken: string, sendResponse: (response?: { success: boolean, message?: string, error?: string }) => void): void {
   try {
     // First try to get the temporary Google token from storage
     chrome.storage.local.get('tempGoogleToken', (data) => {
@@ -93,7 +93,7 @@ function handleProcessShortcutApiToken(shortcutToken: string, sendResponse: (res
  * Handles initiating the Google OAuth flow
  * Gets the Google auth token and stores it temporarily for later use
  */
-function handleInitiateGoogleOAuth(sendResponse: (response?: unknown) => void): void {
+function handleInitiateGoogleOAuth(sendResponse: (response?: { success: boolean, message?: string, error?: string }) => void): void {
   try {
     chrome.identity.getAuthToken({ interactive: true }, (googleToken) => {
       if (chrome.runtime.lastError) {

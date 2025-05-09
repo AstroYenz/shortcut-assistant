@@ -1,7 +1,7 @@
 import { Settings } from 'lucide-react'
 import React, { useState } from 'react'
 
-import '@sx/../styles/globals.css'
+import '@/styles/globals.css'
 import './styles.css'
 import { Drawers } from '@/client/components/drawers'
 import { DrawerType } from '@/client/types/drawer'
@@ -17,7 +17,7 @@ function FAB(): React.ReactElement {
 
   function handleOpenSettings(): void {
     setOpenDrawer('settings')
-    setIsOpen(false) // Close the FAB menu when opening a drawer
+    setIsOpen(false)
   }
 
   function handleDrawerChange(drawer: DrawerType | null): void {
