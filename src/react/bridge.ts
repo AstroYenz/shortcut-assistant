@@ -63,8 +63,8 @@ function createMessageListener<T>(resolve: (value: T) => void): MessageListenerW
  * Submits the Shortcut API token to be stored securely
  * Handles the same authentication flow as the legacy extension
  */
-function submitShortcutApiToken(token: string): Promise<MessageResponse<{ success: boolean, message: string, error?: string }>> {
-  return notifyContentScript<MessageResponse<{ success: boolean, message: string, error?: string }>>({
+function submitShortcutApiToken(token: string): Promise<MessageResponse<{ message: string, error?: string }>> {
+  return notifyContentScript<MessageResponse<{ message: string, error?: string }>>({
     action: 'submitShortcutApiToken',
     data: { token }
   })
@@ -74,8 +74,8 @@ function submitShortcutApiToken(token: string): Promise<MessageResponse<{ succes
  * Initiates the Google OAuth flow
  * Returns a success response when authentication is complete
  */
-function initiateGoogleOAuth(): Promise<MessageResponse<{ success: boolean, message: string, error?: string }>> {
-  return notifyContentScript<MessageResponse<{ success: boolean, message: string, error?: string }>>({
+function initiateGoogleOAuth(): Promise<MessageResponse<{ message: string, error?: string }>> {
+  return notifyContentScript<MessageResponse<{ message: string, error?: string }>>({
     action: 'initiateGoogleOAuth',
     data: {}
   })

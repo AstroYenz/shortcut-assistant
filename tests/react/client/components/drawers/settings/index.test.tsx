@@ -54,7 +54,10 @@ describe('Settings component', function testSettingsComponentSuite() {
       return {}
     })
 
-    mockSubmitShortcutApiToken.mockResolvedValue({ success: true, data: {} })
+    mockSubmitShortcutApiToken.mockResolvedValue({
+      success: true,
+      data: { message: 'API token saved' }
+    })
   })
 
   afterEach(() => {
@@ -156,7 +159,10 @@ describe('Settings component', function testSettingsComponentSuite() {
 
   describe('API token submission', function testApiTokenSubmission() {
     it('submits API token when button is clicked', async function testSubmitsApiToken() {
-      mockSubmitShortcutApiToken.mockResolvedValue({ success: true, data: {} })
+      mockSubmitShortcutApiToken.mockResolvedValue({
+        success: true,
+        data: { message: 'API token saved' }
+      })
 
       setup()
 
@@ -187,7 +193,10 @@ describe('Settings component', function testSettingsComponentSuite() {
     })
 
     it('handles error in API token submission', async function testHandlesApiTokenError() {
-      mockSubmitShortcutApiToken.mockResolvedValue({ success: false, data: { error: 'API error' } })
+      mockSubmitShortcutApiToken.mockResolvedValue({
+        success: false,
+        data: { message: 'API error', error: 'API error' }
+      })
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
 
       setup()
@@ -220,7 +229,10 @@ describe('Settings component', function testSettingsComponentSuite() {
     })
 
     it('resets submit status after the defined delay period', async function testResetsSubmitStatusAfterDelay() {
-      mockSubmitShortcutApiToken.mockResolvedValue({ success: true, data: {} })
+      mockSubmitShortcutApiToken.mockResolvedValue({
+        success: true,
+        data: { message: 'API token saved' }
+      })
 
       setup()
 

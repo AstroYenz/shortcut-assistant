@@ -37,7 +37,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
     mockGet.mockImplementation((keys, callback) => {
       callback({})
     })
-    mockInitiateGoogleOAuth.mockResolvedValue({ success: true, data: {} })
+    mockInitiateGoogleOAuth.mockResolvedValue({ success: true, data: { message: 'Authentication successful' } })
   })
 
   it('renders with correct heading', function testRendersCorrectHeading() {
@@ -62,7 +62,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
     mockInitiateGoogleOAuth.mockImplementation(() => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve({ success: true, data: {} })
+          resolve({ success: true, data: { message: 'Authentication successful' } })
         }, 100)
       })
     })
@@ -114,7 +114,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
     mockInitiateGoogleOAuth.mockImplementation(() => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve({ success: true, data: {} })
+          resolve({ success: true, data: { message: 'Authentication successful' } })
         }, 100)
       })
     })
@@ -137,7 +137,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
   })
 
   it('applies error styling when authentication fails', async function testAppliesErrorStyling() {
-    mockInitiateGoogleOAuth.mockResolvedValue({ success: false, data: { error: 'Auth failed' } })
+    mockInitiateGoogleOAuth.mockResolvedValue({ success: false, data: { message: 'Authentication failed', error: 'Auth failed' } })
 
     setup()
 

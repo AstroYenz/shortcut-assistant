@@ -70,7 +70,7 @@ function Settings({ open, onOpenChange }: SettingsProps): React.ReactElement {
         }, STATUS_RESET_DELAY_MS)
       }
       else {
-        console.error('Error submitting API token:', response.data?.error)
+        console.error('Error submitting API token:', response.data.error)
         setSubmitStatus('error')
         // Reset the error state after the same delay as success
         setTimeout(() => {
