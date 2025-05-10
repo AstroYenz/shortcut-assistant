@@ -111,6 +111,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            console.log("Job outputs:", ${{ toJSON(needs.prepare-release-assets.outputs) }});
             const publishRelease = require('./.github/scripts/publish-release.js');
             await publishRelease({ 
               github, 

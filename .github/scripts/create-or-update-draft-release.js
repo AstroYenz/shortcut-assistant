@@ -10,7 +10,7 @@ module.exports = async ({ github, context, core }) => {
   let draftRelease = releases.data.find(release => release.tag_name === releaseTag && release.draft === true);
   if (!draftRelease) {
     console.log(`Creating draft release`);
-    draftRelease = await github.rest.repos.createRelease({
+    const result = await github.rest.repos.createRelease({
       owner,
       repo,
       tag_name: releaseTag,
@@ -18,9 +18,11 @@ module.exports = async ({ github, context, core }) => {
       body: releaseNotes,
       draft: true,
     });
+    draftRelease = result.data;
     console.log(`Draft release created`);
   }
-  console.log(draftRelease);
+  console.log(`Draft release ID: ${draftRelease.id}`);
+  console.log(`Draft release upload URL: ${draftRelease.upload_url}`);
   core.setOutput("upload_url", draftRelease.upload_url);
   core.setOutput("release_id", draftRelease.id);
 };
