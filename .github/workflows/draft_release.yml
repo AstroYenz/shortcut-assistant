@@ -71,7 +71,6 @@ jobs:
           script: |
             const createDraftRelease = require('./.github/scripts/create-draft-release.js');
             await createDraftRelease({ github, context, core });
-            await createDraftRelease({ github, context, core });
 
   upload-release-asset:
     needs: prepare-release-assets
