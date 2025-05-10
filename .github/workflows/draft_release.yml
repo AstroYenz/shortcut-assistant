@@ -9,9 +9,10 @@ on:
       - closed
       - synchronize
 
+# Define minimum required permissions
 permissions:
-  contents: write
-  pull-requests: write
+  contents: write    # Needed for creating/updating releases and uploading assets
+  pull-requests: read # Only need to read PR information
 
 jobs:
   prepare-release-assets:
@@ -30,7 +31,7 @@ jobs:
           node-version: '21'
 
       - name: Install dependencies
-        run: cd src && yarn
+        run: yarn
 
       - name: Extract tag name
         id: extract_tag
@@ -48,8 +49,7 @@ jobs:
 
       - name: Build and zip the extension
         run: |
-          mkdir dist
-          cd src
+          mkdir -p dist
           yarn run build-css
           yarn run dist
         env:
@@ -69,36 +69,16 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const { owner, repo } = context.repo;
-            const pr = context.payload.pull_request;
-            const releaseTag = pr.title;
-            const releaseNotes = pr.body;
-            const releases = await github.rest.repos.listReleases({
-              owner,
-              repo,
-            });
-            let draftRelease = releases.data.find(release => release.tag_name === releaseTag && release.draft === true);
-            if (!draftRelease) {
-            console.log(`Creating draft release`);
-              draftRelease = await github.rest.repos.createRelease({
-                owner,
-                repo,
-                tag_name: releaseTag,
-                name: releaseTag,
-                body: releaseNotes,
-                draft: true,
-              });
-              console.log(`Draft release created`);
-            }
-            console.log(draftRelease)
-            core.setOutput("upload_url", draftRelease.upload_url);
-            core.setOutput("release_id", draftRelease.id);
+            const createDraftRelease = require('./.github/scripts/create-draft-release.js');
+            await createDraftRelease({ github, context, core });
 
   upload-release-asset:
     needs: prepare-release-assets
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Download dist.zip artifact
         uses: actions/download-artifact@v4.1.7
         with:
@@ -110,32 +90,32 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const { owner, repo } = context.repo;
-            const pr = context.payload.pull_request;
-            const releases = await github.rest.repos.listReleases({
-              owner,
-              repo,
+            const uploadReleaseAsset = require('./.github/scripts/upload-release-asset.js');
+            await uploadReleaseAsset({ 
+              github, 
+              context, 
+              core, 
+              releaseId: ${{ needs.prepare-release-assets.outputs.release_id }}
             });
-            const releaseTag = pr.title;
-            let draftRelease = releases.data.find(release => release.tag_name === releaseTag && release.draft === true);
-            const releaseId = draftRelease.id;
-            const assetPath = './dist/dist.zip';
-            const assetName = 'ChromeExtension.zip';
-            const assetContentType = 'application/zip'; 
-            const data = require('fs').readFileSync(assetPath);
-            console.log(`Uploading asset ${assetPath} to release ${releaseId}`);
-            console.log(`Release published: https://github.com/${owner}/${repo}/releases/tag/${releaseId}`);
-            release = await github.rest.repos.updateRelease({
-              owner,
-              repo,
-              release_id: releaseId,
-              draft: false,
+
+  publish-release:
+    needs: [prepare-release-assets, upload-release-asset]
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Publish release
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            console.log("Job outputs:", ${{ toJSON(needs.prepare-release-assets.outputs) }});
+            const publishRelease = require('./.github/scripts/publish-release.js');
+            await publishRelease({ 
+              github, 
+              context, 
+              core, 
+              releaseId: ${{ needs.prepare-release-assets.outputs.release_id }}
             });
-            await github.rest.repos.uploadReleaseAsset({
-              owner,
-              repo,
-              release_id: releaseId,
-              name: assetName,
-              data,
-            });
-            console.log('Asset uploaded');
