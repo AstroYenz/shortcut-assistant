@@ -21,7 +21,7 @@ module.exports = async ({ github, context, core, releaseTag, releaseBody }) => {
     console.log(`Found draft release: ${draftRelease.id}`);
     
     // Update release with latest PR description
-    const updatedRelease = await github.rest.repos.updateRelease({
+    const result = await github.rest.repos.updateRelease({
       owner,
       repo,
       release_id: draftRelease.id,
@@ -29,8 +29,14 @@ module.exports = async ({ github, context, core, releaseTag, releaseBody }) => {
       draft: false
     });
     
-    console.log(`Release published: ${updatedRelease.data.html_url}`);
-    return updatedRelease.data;
+    const updatedRelease = result.data;
+    console.log(`Release published: ${updatedRelease.html_url}`);
+    
+    // Set outputs for downstream jobs
+    core.setOutput("release_id", updatedRelease.id);
+    core.setOutput("release_url", updatedRelease.html_url);
+    
+    return updatedRelease;
   } catch (error) {
     core.setFailed(`Failed to update or publish release: ${error.message}`);
     return null;
