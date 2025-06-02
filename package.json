@@ -65,7 +65,7 @@
     "tailwindcss": "3.4.17",
     "ts-loader": "^9.5.1",
     "tsx": "^4.19.4",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "webpack": "^5.99.7",
     "webpack-cli": "^5.1.4"
   },
