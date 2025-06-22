@@ -27,10 +27,10 @@ function setupReactMessageListener(): void {
         'Failed to authenticate with Google'
       )
     }
-    else if (payload?.action === 'analyzeStory') {
+    else if (payload?.action === 'callOpenAI') {
       handleMessageAction(
-        () => handleAnalyzeStory(payload.data.description),
-        'Failed to analyze story'
+        () => handleCallOpenAI(payload.data.description, payload.data.type),
+        'Failed to call OpenAI'
       )
     }
 
@@ -132,42 +132,73 @@ async function handleInitiateGoogleOAuth(): Promise<{ success: boolean, message:
 }
 
 /**
- * Handle story analysis using existing AI functionality
+ * Handle OpenAI call using existing AI functionality - matches legacy exactly
  */
-async function handleAnalyzeStory(description: string): Promise<{ success: boolean, message: string, result?: { analysis: string, suggestions?: string[] }, error?: string }> {
+async function handleCallOpenAI(description: string, type: 'analyze' | 'breakup'): Promise<{ success: boolean, message: string, error?: string }> {
   try {
     return new Promise((resolve, reject) => {
+      // Send the exact same message format as the legacy JS functions
       chrome.runtime.sendMessage({
         action: 'callOpenAI',
-        data: { prompt: description }
+        data: { prompt: description, type }
       }, (response) => {
         if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message || 'Unknown error during story analysis'))
+          reject(new Error(chrome.runtime.lastError.message || 'Unknown error during OpenAI call'))
           return
         }
 
-        // The legacy callOpenAI might not return structured data, so we'll mock a result for now
-        // In the real implementation, this would be processed by the AI service
+        // The callOpenAI returns immediately, results come via onMessage listener
         resolve({
-          success: response?.success ?? true,
-          message: response?.message || 'Story analysis completed',
-          result: {
-            analysis: response?.analysis || 'Story analysis completed successfully.',
-            suggestions: response?.suggestions || []
-          },
+          success: true,
+          message: 'OpenAI request initiated successfully',
           error: response?.error
         })
       })
     })
   }
   catch (error) {
-    console.error('Error in handleAnalyzeStory:', error)
+    console.error('Error in handleCallOpenAI:', error)
     throw error
   }
 }
 
 // Flag to track if bridge is initialized
 let isBridgeInitialized = false
+
+// Store for AI streaming results - components can subscribe to this
+const aiResultsListeners: ((message: any) => void)[] = []
+
+/**
+ * Subscribe to AI streaming results
+ */
+function subscribeToAIResults(callback: (message: any) => void): () => void {
+  aiResultsListeners.push(callback)
+  return () => {
+    const index = aiResultsListeners.indexOf(callback)
+    if (index > -1) {
+      aiResultsListeners.splice(index, 1)
+    }
+  }
+}
+
+// Expose globally for React components
+(window as any).__subscribeToAIResults = subscribeToAIResults
+
+/**
+ * Handle AI streaming results from service worker
+ */
+function handleAIStreamingResults(message: any): void {
+  // Forward streaming results to all subscribed React components
+  aiResultsListeners.forEach(callback => callback(message))
+}
+
+// Listen for AI streaming results from service worker
+chrome.runtime.onMessage.addListener((message) => {
+  // Check if this is an AI process message
+  if (message.status !== undefined && (message.status === 0 || message.status === 1 || message.status === 2)) {
+    handleAIStreamingResults(message)
+  }
+})
 
 /**
  * Initialize React components and set up message listeners
@@ -222,5 +253,6 @@ export {
   setupReactMessageListener,
   handleSubmitShortcutApiToken,
   handleInitiateGoogleOAuth,
-  handleAnalyzeStory
+  handleCallOpenAI,
+  subscribeToAIResults
 }

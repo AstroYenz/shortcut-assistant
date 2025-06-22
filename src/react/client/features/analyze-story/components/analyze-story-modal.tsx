@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { analyzeStory } from '@/bridge'
 import { Button } from '@/client/components/ui/button'
@@ -7,20 +7,39 @@ import { cn } from '@/client/lib/utils/cn'
 
 type AnalysisStatus = 'idle' | 'loading' | 'success' | 'error'
 
-interface AnalysisResult {
-  analysis: string
-  suggestions?: string[]
-}
-
 interface AnalyzeStoryModalProps {
   onClose?: () => void
+  analysisType: 'analyze' | 'breakup'
 }
 
-function AnalyzeStoryModal({ onClose }: AnalyzeStoryModalProps): React.ReactElement {
+function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): React.ReactElement {
   const { story } = useStoryContext()
   const [analysisStatus, setAnalysisStatus] = useState<AnalysisStatus>('idle')
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
+  const [streamingContent, setStreamingContent] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Subscribe to AI streaming results from content bridge
+    const subscribeToAIResults = (window as any).__subscribeToAIResults
+    if (!subscribeToAIResults) return
+    
+    const unsubscribe = subscribeToAIResults((message: any) => {
+      // Only handle messages for our analysis type
+      if (message.data?.type === analysisType) {
+        if (message.status === 0) { // updated
+          setStreamingContent(message.data.content || '')
+        } else if (message.status === 2) { // completed
+          setAnalysisStatus('success')
+          setStreamingContent(message.data.content || '')
+        } else if (message.status === 1) { // failed
+          setAnalysisStatus('error')
+          setError(message.message || 'Analysis failed')
+        }
+      }
+    })
+
+    return unsubscribe
+  }, [analysisType])
 
   async function handleAnalyzeStory(): Promise<void> {
     if (!story.description) {
@@ -30,17 +49,16 @@ function AnalyzeStoryModal({ onClose }: AnalyzeStoryModalProps): React.ReactElem
 
     setAnalysisStatus('loading')
     setError(null)
+    setStreamingContent('')
 
     try {
-      const response = await analyzeStory(story.description)
+      const response = await analyzeStory(story.description, analysisType)
 
-      if (response.success) {
-        setAnalysisResult(response.data.result)
-        setAnalysisStatus('success')
-      } else {
-        setError(response.data.error || 'Failed to analyze story')
+      if (!response.success) {
+        setError(response.data.error || 'Failed to start analysis')
         setAnalysisStatus('error')
       }
+      // Don't set success here - wait for streaming results
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to analyze story')
       setAnalysisStatus('error')
@@ -55,17 +73,21 @@ function AnalyzeStoryModal({ onClose }: AnalyzeStoryModalProps): React.ReactElem
 
   const getButtonText = (): string => {
     switch (analysisStatus) {
-      case 'loading': return 'Analyzing...'
-      case 'success': return 'Analyze Again'
-      case 'error': return 'Retry Analysis'
-      default: return 'Analyze Story'
+      case 'loading': return analysisType === 'analyze' ? 'Analyzing...' : 'Breaking Up...'
+      case 'success': return analysisType === 'analyze' ? 'Analyze Again' : 'Break Up Again'
+      case 'error': return 'Retry'
+      default: return analysisType === 'analyze' ? 'Analyze Story' : 'Break Up Story'
     }
+  }
+
+  const getTitle = (): string => {
+    return analysisType === 'analyze' ? 'Analyze Story' : 'Break Up Story'
   }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Analyze Story</h2>
+        <h2 className="text-lg font-semibold">{getTitle()}</h2>
         <button
           onClick={handleClose}
           className="text-gray-400 hover:text-gray-600 text-xl"
@@ -104,24 +126,14 @@ function AnalyzeStoryModal({ onClose }: AnalyzeStoryModalProps): React.ReactElem
           </div>
         )}
 
-        {analysisResult && (
+        {(streamingContent || analysisStatus === 'loading') && (
           <div className="bg-blue-50 border border-blue-200 rounded-md p-4 space-y-3">
-            <h4 className="text-sm font-medium text-blue-900">Analysis Results</h4>
-            <div className="text-sm text-blue-800 whitespace-pre-wrap">
-              {analysisResult.analysis}
+            <h4 className="text-sm font-medium text-blue-900">
+              {analysisType === 'analyze' ? 'Analysis Results' : 'Breakdown Results'}
+            </h4>
+            <div className="text-sm text-blue-800 whitespace-pre-wrap min-h-[100px]">
+              {streamingContent || (analysisStatus === 'loading' ? 'Processing...' : '')}
             </div>
-            {analysisResult.suggestions && analysisResult.suggestions.length > 0 && (
-              <div>
-                <h5 className="text-sm font-medium text-blue-900 mb-2">Suggestions</h5>
-                <ul className="list-disc list-inside space-y-1">
-                  {analysisResult.suggestions.map((suggestion, index) => (
-                    <li key={index} className="text-sm text-blue-800">
-                      {suggestion}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
         )}
       </div>

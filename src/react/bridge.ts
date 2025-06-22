@@ -82,13 +82,13 @@ function initiateGoogleOAuth(): Promise<MessageResponse<{ message: string, error
 }
 
 /**
- * Analyzes a story description using AI
+ * Analyzes a story description using AI - matches exact legacy functionality
  * Returns the analysis results
  */
-function analyzeStory(description: string): Promise<MessageResponse<{ result: { analysis: string, suggestions?: string[] }, error?: string }>> {
-  return notifyContentScript<MessageResponse<{ result: { analysis: string, suggestions?: string[] }, error?: string }>>({
-    action: 'analyzeStory',
-    data: { description }
+function analyzeStory(description: string, type: 'analyze' | 'breakup'): Promise<MessageResponse<{ message: string, error?: string }>> {
+  return notifyContentScript<MessageResponse<{ message: string, error?: string }>>({
+    action: 'callOpenAI',
+    data: { description, type }
   })
 }
 

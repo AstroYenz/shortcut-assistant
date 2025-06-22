@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { Button } from '@/client/components/ui/button'
 import { Drawer, DrawerContent } from '@/client/components/ui/drawer'
 import { AnalyzeStoryModal } from '@/client/features/analyze-story/components/analyze-story-modal'
-import { BreakDownStoryModal } from '@/client/features/break-down-story/components/break-down-story-modal'
 import { cn } from '@/client/lib/utils/cn'
 
 
@@ -13,10 +12,11 @@ type ModalView = 'main' | 'analyze' | 'breakdown' | 'settings'
 interface ShortcutAssistantModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  initialView?: 'analyze' | 'breakup'
 }
 
-function ShortcutAssistantModal({ open, onOpenChange }: ShortcutAssistantModalProps): React.ReactElement {
-  const [currentView, setCurrentView] = useState<ModalView>('main')
+function ShortcutAssistantModal({ open, onOpenChange, initialView }: ShortcutAssistantModalProps): React.ReactElement {
+  const [currentView, setCurrentView] = useState<ModalView>(initialView || 'main')
 
   function handleOpenChange(isOpen: boolean): void {
     onOpenChange(isOpen)
@@ -88,29 +88,19 @@ function ShortcutAssistantModal({ open, onOpenChange }: ShortcutAssistantModalPr
 
   function renderAnalyzeView(): React.ReactElement {
     return (
-      <div className="space-y-4">
-        <button
-          onClick={handleBackToMain}
-          className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
-        >
-          ← Back to Actions
-        </button>
-        <AnalyzeStoryModal onClose={handleBackToMain} />
-      </div>
+      <AnalyzeStoryModal 
+        onClose={handleBackToMain} 
+        analysisType="analyze"
+      />
     )
   }
 
   function renderBreakdownView(): React.ReactElement {
     return (
-      <div className="space-y-4">
-        <button
-          onClick={handleBackToMain}
-          className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
-        >
-          ← Back to Actions
-        </button>
-        <BreakDownStoryModal onClose={handleBackToMain} />
-      </div>
+      <AnalyzeStoryModal 
+        onClose={handleBackToMain} 
+        analysisType="breakup"
+      />
     )
   }
 
