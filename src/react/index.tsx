@@ -2,6 +2,7 @@ import React from 'react'
 import { createRoot, Root } from 'react-dom/client'
 
 import FAB from '@/client/components/FAB'
+import { StoryProvider } from '@/client/contexts/story-context'
 
 // Store the React root instance for proper cleanup
 let fabRoot: Root | undefined
@@ -24,7 +25,11 @@ export function initReact(): void {
   if (!fabRoot) {
     fabRoot = createRoot(container)
   }
-  fabRoot.render(<FAB />)
+  fabRoot.render(
+    <StoryProvider>
+      <FAB />
+    </StoryProvider>
+  )
 }
 
 /**

@@ -81,4 +81,15 @@ function initiateGoogleOAuth(): Promise<MessageResponse<{ message: string, error
   })
 }
 
-export { submitShortcutApiToken, initiateGoogleOAuth }
+/**
+ * Analyzes a story description using AI
+ * Returns the analysis results
+ */
+function analyzeStory(description: string): Promise<MessageResponse<{ result: { analysis: string, suggestions?: string[] }, error?: string }>> {
+  return notifyContentScript<MessageResponse<{ result: { analysis: string, suggestions?: string[] }, error?: string }>>({
+    action: 'analyzeStory',
+    data: { description }
+  })
+}
+
+export { submitShortcutApiToken, initiateGoogleOAuth, analyzeStory }
