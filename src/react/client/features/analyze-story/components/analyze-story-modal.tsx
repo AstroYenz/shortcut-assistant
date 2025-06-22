@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { analyzeStory } from '@/bridge'
+import { analyzeStoryReact } from '@/bridge'
 import { Button } from '@/client/components/ui/button'
 import { useStoryContext } from '@/client/contexts/story-context'
 import { cn } from '@/client/lib/utils/cn'
@@ -17,29 +17,30 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
   const [analysisStatus, setAnalysisStatus] = useState<AnalysisStatus>('idle')
   const [streamingContent, setStreamingContent] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
+  const [currentRequestId, setCurrentRequestId] = useState<string | null>(null)
 
   useEffect(() => {
-    // Subscribe to AI streaming results from content bridge
-    const subscribeToAIResults = (window as any).__subscribeToAIResults
-    if (!subscribeToAIResults) return
+    // Subscribe to React-specific AI streaming results
+    const subscribeToReactAIResults = (window as any).__subscribeToReactAIResults
+    if (!subscribeToReactAIResults) return
     
-    const unsubscribe = subscribeToAIResults((message: any) => {
-      // Only handle messages for our analysis type
-      if (message.data?.type === analysisType) {
-        if (message.status === 0) { // updated
-          setStreamingContent(message.data.content || '')
-        } else if (message.status === 2) { // completed
+    const unsubscribe = subscribeToReactAIResults((message: any) => {
+      // Only handle messages for our current request and analysis type
+      if (message.requestId === currentRequestId && message.analysisType === analysisType) {
+        if (message.status === 'streaming') {
+          setStreamingContent((prev: string) => prev + (message.content || ''))
+        } else if (message.status === 'completed') {
           setAnalysisStatus('success')
-          setStreamingContent(message.data.content || '')
-        } else if (message.status === 1) { // failed
+          setStreamingContent((prev: string) => prev + (message.content || ''))
+        } else if (message.status === 'error') {
           setAnalysisStatus('error')
-          setError(message.message || 'Analysis failed')
+          setError(message.error || 'Analysis failed')
         }
       }
     })
 
     return unsubscribe
-  }, [analysisType])
+  }, [analysisType, currentRequestId])
 
   async function handleAnalyzeStory(): Promise<void> {
     if (!story.description) {
@@ -52,13 +53,15 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
     setStreamingContent('')
 
     try {
-      const response = await analyzeStory(story.description, analysisType)
+      const response = await analyzeStoryReact(story.description, analysisType)
 
-      if (!response.success) {
+      if (response.success) {
+        setCurrentRequestId(response.data.requestId)
+        // Status stays 'loading' - wait for streaming results
+      } else {
         setError(response.data.error || 'Failed to start analysis')
         setAnalysisStatus('error')
       }
-      // Don't set success here - wait for streaming results
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to analyze story')
       setAnalysisStatus('error')

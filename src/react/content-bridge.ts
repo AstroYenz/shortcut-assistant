@@ -27,10 +27,10 @@ function setupReactMessageListener(): void {
         'Failed to authenticate with Google'
       )
     }
-    else if (payload?.action === 'callOpenAI') {
+    else if (payload?.action === 'reactCallOpenAI') {
       handleMessageAction(
-        () => handleCallOpenAI(payload.data.description, payload.data.type),
-        'Failed to call OpenAI'
+        () => handleReactCallOpenAI(payload.data.description, payload.data.type, payload.data.timestamp),
+        'Failed to call OpenAI for React'
       )
     }
 
@@ -132,32 +132,34 @@ async function handleInitiateGoogleOAuth(): Promise<{ success: boolean, message:
 }
 
 /**
- * Handle OpenAI call using existing AI functionality - matches legacy exactly
+ * Handle React-specific OpenAI call - completely separate from legacy JS system
  */
-async function handleCallOpenAI(description: string, type: 'analyze' | 'breakup'): Promise<{ success: boolean, message: string, error?: string }> {
+async function handleReactCallOpenAI(description: string, type: 'analyze' | 'breakup', timestamp: number): Promise<{ success: boolean, requestId: string, message: string, error?: string }> {
   try {
     return new Promise((resolve, reject) => {
-      // Send the exact same message format as the legacy JS functions
+      const requestId = `react-${type}-${timestamp}`
+      
+      // Send to React-specific service worker handler
       chrome.runtime.sendMessage({
-        action: 'callOpenAI',
-        data: { prompt: description, type }
+        action: 'reactCallOpenAI',
+        data: { prompt: description, type, requestId }
       }, (response) => {
         if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message || 'Unknown error during OpenAI call'))
+          reject(new Error(chrome.runtime.lastError.message || 'Unknown error during React OpenAI call'))
           return
         }
 
-        // The callOpenAI returns immediately, results come via onMessage listener
         resolve({
           success: true,
-          message: 'OpenAI request initiated successfully',
+          requestId,
+          message: 'React OpenAI request initiated successfully',
           error: response?.error
         })
       })
     })
   }
   catch (error) {
-    console.error('Error in handleCallOpenAI:', error)
+    console.error('Error in handleReactCallOpenAI:', error)
     throw error
   }
 }
@@ -165,38 +167,47 @@ async function handleCallOpenAI(description: string, type: 'analyze' | 'breakup'
 // Flag to track if bridge is initialized
 let isBridgeInitialized = false
 
-// Store for AI streaming results - components can subscribe to this
-const aiResultsListeners: ((message: any) => void)[] = []
+// React-specific streaming results system - completely separate from legacy
+const reactAIResultsListeners: ((message: ReactAIStreamMessage) => void)[] = []
+
+interface ReactAIStreamMessage {
+  type: 'react-ai-stream'
+  requestId: string
+  status: 'streaming' | 'completed' | 'error'
+  content?: string
+  error?: string
+  analysisType: 'analyze' | 'breakup'
+}
 
 /**
- * Subscribe to AI streaming results
+ * Subscribe to React-specific AI streaming results
  */
-function subscribeToAIResults(callback: (message: any) => void): () => void {
-  aiResultsListeners.push(callback)
+function subscribeToReactAIResults(callback: (message: ReactAIStreamMessage) => void): () => void {
+  reactAIResultsListeners.push(callback)
   return () => {
-    const index = aiResultsListeners.indexOf(callback)
+    const index = reactAIResultsListeners.indexOf(callback)
     if (index > -1) {
-      aiResultsListeners.splice(index, 1)
+      reactAIResultsListeners.splice(index, 1)
     }
   }
 }
 
 // Expose globally for React components
-(window as any).__subscribeToAIResults = subscribeToAIResults
+(window as any).__subscribeToReactAIResults = subscribeToReactAIResults
 
 /**
- * Handle AI streaming results from service worker
+ * Handle React AI streaming results from service worker
  */
-function handleAIStreamingResults(message: any): void {
-  // Forward streaming results to all subscribed React components
-  aiResultsListeners.forEach(callback => callback(message))
+function handleReactAIStreamingResults(message: ReactAIStreamMessage): void {
+  // Forward streaming results to React components only
+  reactAIResultsListeners.forEach(callback => callback(message))
 }
 
-// Listen for AI streaming results from service worker
+// Listen for React-specific AI streaming results
 chrome.runtime.onMessage.addListener((message) => {
-  // Check if this is an AI process message
-  if (message.status !== undefined && (message.status === 0 || message.status === 1 || message.status === 2)) {
-    handleAIStreamingResults(message)
+  // Only handle React-specific streaming messages
+  if (message.type === 'react-ai-stream') {
+    handleReactAIStreamingResults(message as ReactAIStreamMessage)
   }
 })
 
@@ -253,6 +264,6 @@ export {
   setupReactMessageListener,
   handleSubmitShortcutApiToken,
   handleInitiateGoogleOAuth,
-  handleCallOpenAI,
-  subscribeToAIResults
+  handleReactCallOpenAI,
+  subscribeToReactAIResults
 }

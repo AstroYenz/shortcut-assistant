@@ -82,14 +82,14 @@ function initiateGoogleOAuth(): Promise<MessageResponse<{ message: string, error
 }
 
 /**
- * Analyzes a story description using AI - matches exact legacy functionality
- * Returns the analysis results
+ * React-specific AI analysis - completely separate from legacy JS functionality
+ * Returns streaming results to React components only
  */
-function analyzeStory(description: string, type: 'analyze' | 'breakup'): Promise<MessageResponse<{ message: string, error?: string }>> {
-  return notifyContentScript<MessageResponse<{ message: string, error?: string }>>({
-    action: 'callOpenAI',
-    data: { description, type }
+function analyzeStoryReact(description: string, type: 'analyze' | 'breakup'): Promise<MessageResponse<{ requestId: string, message: string, error?: string }>> {
+  return notifyContentScript<MessageResponse<{ requestId: string, message: string, error?: string }>>({
+    action: 'reactCallOpenAI',
+    data: { description, type, timestamp: Date.now() }
   })
 }
 
-export { submitShortcutApiToken, initiateGoogleOAuth, analyzeStory }
+export { submitShortcutApiToken, initiateGoogleOAuth, analyzeStoryReact }

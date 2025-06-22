@@ -2,7 +2,7 @@ import { Settings } from 'lucide-react'
 import React, { useState } from 'react'
 
 import { Button } from '@/client/components/ui/button'
-import { Drawer, DrawerContent } from '@/client/components/ui/drawer'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/client/components/ui/dialog'
 import { AnalyzeStoryModal } from '@/client/features/analyze-story/components/analyze-story-modal'
 import { cn } from '@/client/lib/utils/cn'
 
@@ -142,13 +142,11 @@ function ShortcutAssistantModal({ open, onOpenChange, initialView }: ShortcutAss
   }
 
   return (
-    <Drawer open={open} onOpenChange={handleOpenChange}>
-      <DrawerContent className="z-[9999]">
-        <div className="mx-auto w-full max-w-lg p-6">
-          {renderCurrentView()}
-        </div>
-      </DrawerContent>
-    </Drawer>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent>
+        {renderCurrentView()}
+      </DialogContent>
+    </Dialog>
   )
 }
 
