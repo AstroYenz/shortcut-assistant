@@ -1,7 +1,8 @@
 import { sendEvent } from '@sx/analytics/event'
 import {
   handleGetSavedNotes,
-  handleOpenAICall
+  handleOpenAICall,
+  handleReactOpenAICall
 } from '@sx/service-worker/handlers'
 import IpcRequest from '@sx/types/ipc-request'
 import '@sx/auth/oauth/service-worker/listener'
@@ -16,6 +17,13 @@ function registerAiListeners(): void {
         return
       }
       handleOpenAICall(request.data.prompt, request.data.type, sender.tab.id).then(sendResponse)
+      return true // Keep the message channel open for the async response
+    }
+    if (request.action === 'reactCallOpenAI') {
+      if (!sender.tab || !sender.tab.id) {
+        return
+      }
+      handleReactOpenAICall(request.data.prompt, request.data.type, request.data.requestId, sender.tab.id).then(sendResponse)
       return true // Keep the message channel open for the async response
     }
   })

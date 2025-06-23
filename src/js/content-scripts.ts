@@ -90,4 +90,6 @@ export async function handleMessage(request: { message: string, url: string }): 
   }
 }
 
-chrome.runtime.onMessage.addListener(handleMessage)
+// NOTE: Message listener moved to unified router in content-bridge.ts
+// handleMessage() is now called by the unified router
+// Previous `chrome.runtime.onMessage.addListener(handleMessage)` was here

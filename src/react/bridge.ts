@@ -25,7 +25,7 @@ function createMessageListener<T>(resolve: (value: T) => void): MessageListenerW
  * @returns A promise that resolves to the response from the content script
  */
 function notifyContentScript<T>(message: Message<Record<string, unknown>>): Promise<T> {
-  const RESPONSE_TIMEOUT_MS = 5000
+  const RESPONSE_TIMEOUT_MS = 10_000 // 10 seconds
   const MILLISECONDS_PER_SECOND = 1000
 
   function handlePromise(resolve: (value: T) => void, reject: (reason?: unknown) => void): void {
@@ -80,4 +80,15 @@ function initiateGoogleOAuth(): Promise<MessageResponse<{ message: string, error
   })
 }
 
-export { submitShortcutApiToken, initiateGoogleOAuth }
+/**
+ * React-specific AI analysis - completely separate from legacy JS functionality
+ * Returns streaming results to React components only
+ */
+function analyzeStoryReact(description: string, type: 'analyze' | 'breakup', timestamp?: number): Promise<{ success: boolean, message: string, error?: string, requestId?: string }> {
+  return notifyContentScript<{ success: boolean, message: string, error?: string, requestId?: string }>({
+    action: 'reactCallOpenAI',
+    data: { description, type, timestamp: timestamp || Date.now() }
+  })
+}
+
+export { submitShortcutApiToken, initiateGoogleOAuth, analyzeStoryReact }
