@@ -35,7 +35,7 @@ function StoryProvider({ children, initialStory = {} }: StoryProviderProps): Rea
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  async function refreshStory(): Promise<void> {
+  function refreshStory(): void {
     setIsLoading(true)
     setError(null)
 
