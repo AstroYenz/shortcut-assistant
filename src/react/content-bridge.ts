@@ -222,13 +222,10 @@ function handleReactAIStreamingResults(message: ReactAIStreamMessage): void {
  * Routes messages to appropriate handlers based on message type
  */
 chrome.runtime.onMessage.addListener(async (message, _sender, _sendResponse) => {
-  console.log('🔄 Unified router received message:', message)
-
   // ==================== REACT-SPECIFIC MESSAGES ====================
 
   // Handle React AI streaming results from service worker
   if (message.type === 'react-ai-stream') {
-    console.log('✅ Routing to React AI handler:', message)
     handleReactAIStreamingResults(message as ReactAIStreamMessage)
     return true // Keep message channel open
   }
@@ -237,7 +234,6 @@ chrome.runtime.onMessage.addListener(async (message, _sender, _sendResponse) => 
 
   // Handle legacy AI processing messages (during transition period)
   if (message.status !== undefined) {
-    console.log('📝 Routing to legacy AI handler:', message)
     const { AiProcessMessageType } = await import('@sx/analyze/types/AiProcessMessage')
 
     // Legacy AI analysis listener functionality
@@ -263,7 +259,6 @@ chrome.runtime.onMessage.addListener(async (message, _sender, _sendResponse) => 
 
   // Handle general content script messages (update, state changes, etc.)
   if (message.message) {
-    console.log('⚙️ Routing to general content script handler:', message)
     const { handleMessage } = await import('@sx/content-scripts')
     await handleMessage(message)
     return true
@@ -271,7 +266,6 @@ chrome.runtime.onMessage.addListener(async (message, _sender, _sendResponse) => 
 
   // ==================== UNHANDLED MESSAGES ====================
 
-  console.log('❌ No handler found for message:', message)
   // Return false for unhandled messages (allows other listeners to handle them)
   return false
 })
