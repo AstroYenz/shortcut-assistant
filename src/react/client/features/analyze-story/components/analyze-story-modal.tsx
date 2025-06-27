@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import { ChevronDown } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import { analyzeStoryReact } from '@/bridge'
 import { Button } from '@/client/components/ui/button'
 import { useStoryContext } from '@/client/contexts/story-context'
 import { cn } from '@/client/lib/utils/cn'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 
 type AnalysisStatus = 'idle' | 'loading' | 'success' | 'error'
@@ -28,6 +30,7 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
   const [streamingContent, setStreamingContent] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
   const [currentRequestId, setCurrentRequestId] = useState<string | null>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Subscribe to React-specific AI streaming results
@@ -113,10 +116,10 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
 
   const getButtonText = (): string => {
     switch (analysisStatus) {
-    case 'loading': return analysisType === 'analyze' ? 'Analyzing...' : 'Breaking Up...'
-    case 'success': return analysisType === 'analyze' ? 'Analyze Again' : 'Break Up Again'
-    case 'error': return 'Retry'
-    default: return analysisType === 'analyze' ? 'Analyze Story' : 'Break Up Story'
+      case 'loading': return analysisType === 'analyze' ? 'Analyzing...' : 'Breaking Up...'
+      case 'success': return analysisType === 'analyze' ? 'Analyze Again' : 'Break Up Again'
+      case 'error': return 'Retry'
+      default: return analysisType === 'analyze' ? 'Analyze Story' : 'Break Up Story'
     }
   }
 
@@ -125,7 +128,7 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col h-full space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">{getTitle()}</h2>
         <button
@@ -137,18 +140,7 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
         </button>
       </div>
 
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-sm font-medium text-gray-300 mb-2">Story Details</h3>
-          <div className="bg-gray-800 p-3 rounded-md">
-            <p className="text-sm font-medium text-white">{story.title || 'Untitled Story'}</p>
-            <p className="text-xs text-gray-400 mt-1">
-              {story.description?.substring(0, 150) || 'No description available'}
-              {story.description && story.description.length > 150 && '...'}
-            </p>
-          </div>
-        </div>
-
+      <div className="flex flex-col h-full space-y-4 flex-1 min-h-0">
         <Button
           onClick={handleAnalyzeStory}
           disabled={analysisStatus === 'loading' || !story.description}
@@ -167,13 +159,15 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
         )}
 
         {(streamingContent || analysisStatus === 'loading') && (
-          <div className="bg-gray-800 border border-gray-600 rounded-md p-4 space-y-3">
+          <div className="bg-gray-800 border border-gray-600 rounded-md p-4 space-y-3 flex flex-col flex-1 min-h-0">
             <h4 className="text-sm font-medium text-gray-200">
               {analysisType === 'analyze' ? 'Analysis Results' : 'Breakdown Results'}
             </h4>
-            <div className="text-sm text-gray-300 whitespace-pre-wrap min-h-[100px]">
+            <ScrollArea
+              className="text-sm text-gray-300 whitespace-pre-wrap pr-2 pb-8 min-h-[100px] h-72"
+            >
               {streamingContent || (analysisStatus === 'loading' ? 'Processing...' : '')}
-            </div>
+            </ScrollArea>
           </div>
         )}
       </div>

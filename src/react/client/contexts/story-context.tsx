@@ -35,7 +35,7 @@ function StoryProvider({ children, initialStory = {} }: StoryProviderProps): Rea
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  function refreshStory(): void {
+  function refreshStory(): Promise<void> {
     setIsLoading(true)
     setError(null)
 
@@ -65,6 +65,8 @@ function StoryProvider({ children, initialStory = {} }: StoryProviderProps): Rea
     finally {
       setIsLoading(false)
     }
+
+    return Promise.resolve()
   }
 
   useEffect(() => {

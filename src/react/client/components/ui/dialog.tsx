@@ -32,7 +32,7 @@ function Dialog({ open, onOpenChange, children }: DialogProps): React.ReactEleme
       role="dialog"
       aria-modal="true"
     >
-      <div className="bg-gray-900 text-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
+      <div className="bg-gray-900 text-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[75vh]">
         {children}
       </div>
     </div>
@@ -46,7 +46,7 @@ interface DialogContentProps {
 
 function DialogContent({ children, className }: DialogContentProps): React.ReactElement {
   return (
-    <div className={cn('p-6 overflow-y-auto max-h-[90vh]', className)}>
+    <div className={cn('p-6', className)}>
       {children}
     </div>
   )

@@ -25,7 +25,7 @@ function createMessageListener<T>(resolve: (value: T) => void): MessageListenerW
  * @returns A promise that resolves to the response from the content script
  */
 function notifyContentScript<T>(message: Message<Record<string, unknown>>): Promise<T> {
-  const RESPONSE_TIMEOUT_MS = 10_000 // 10 seconds
+  const RESPONSE_TIMEOUT_MS = 60_000 // 60 seconds
   const MILLISECONDS_PER_SECOND = 1000
 
   function handlePromise(resolve: (value: T) => void, reject: (reason?: unknown) => void): void {
