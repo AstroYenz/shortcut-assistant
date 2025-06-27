@@ -1,7 +1,6 @@
 {
   "name": "Shortcut Assistant - Chrome Extension",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
-
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/common-utils:2": {
@@ -10,7 +9,6 @@
       "installOhMyZsh": true
     }
   },
-
   "customizations": {
     "vscode": {
       "extensions": [
@@ -38,14 +36,22 @@
           "typescriptreact": "html"
         },
         "tailwindCSS.experimental.classRegex": [
-          ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
-          ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+          [
+            "cva\\(([^)]*)\\)",
+            "[\"'`]([^\"'`]*).*?[\"'`]"
+          ],
+          [
+            "cx\\(([^)]*)\\)",
+            "(?:'|\"|`)([^']*)(?:'|\"|`)"
+          ]
         ]
       }
     }
   },
-
-  "forwardPorts": [3000, 9229],
+  "forwardPorts": [
+    3000,
+    9229
+  ],
   "portsAttributes": {
     "3000": {
       "label": "Dev Server",
@@ -56,16 +62,19 @@
       "onAutoForward": "silent"
     }
   },
-
   "postCreateCommand": "yarn install",
-
   "postStartCommand": "echo 'DevContainer ready! Run yarn dev or yarn dev:react to start development with auto-rebuild.'",
-
   "mounts": [
     "source=${localWorkspaceFolder}/build,target=${containerWorkspaceFolder}/build,type=bind"
   ],
-
   "remoteUser": "node",
-
-  "runArgs": ["--init"]
+  "runArgs": [
+    "--init"
+  ],
+  "remoteEnv": {
+    "SSH_AUTH_SOCK": "/run/host-services/ssh-auth.sock"
+  },
+  "runServices": [
+    "ssh-agent"
+  ]
 }
