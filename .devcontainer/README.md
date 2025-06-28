@@ -41,6 +41,7 @@ The webpack watch mode will automatically rebuild your extension when files chan
 2. Manually refresh the extension in Chrome (click the refresh icon on the extension card)
 3. Reload any pages where the extension is active
 
+
 ### Available VS Code Tasks
 Access these via `Ctrl+Shift+P > Tasks: Run Task`:
 - **Start Development (Auto-rebuild)** - Default build task
@@ -77,9 +78,3 @@ Access these via `Ctrl+Shift+P > Tasks: Run Task`:
 2. **React Development**: Use `yarn dev:react` when working on React components
 3. **Testing**: The container includes Jest with proper timezone configuration
 4. **Linting**: ESLint is configured to run on save and can be manually triggered
-
-## Troubleshooting
-
-- If the container fails to start, ensure Docker is running
-- If packages fail to install, try rebuilding the container: `Ctrl+Shift+P > Dev Containers: Rebuild Container`
-- For webpack watch issues, restart the development task 
