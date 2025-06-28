@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { analyzeStoryReact } from '@/bridge'
 import { Button } from '@/client/components/ui/button'
 import { useStoryContext } from '@/client/contexts/story-context'
-import { cn } from '@/client/lib/utils/cn'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 
@@ -144,10 +143,6 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
         <Button
           onClick={handleAnalyzeStory}
           disabled={analysisStatus === 'loading' || !story.description}
-          className={cn({
-            'bg-green-600': analysisStatus === 'success',
-            'bg-red-600': analysisStatus === 'error'
-          })}
         >
           {getButtonText()}
         </Button>
