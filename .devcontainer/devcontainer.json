@@ -1,0 +1,80 @@
+{
+  "name": "Shortcut Assistant - Chrome Extension",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next", // TypeScript language support with latest features
+        "dbaeumer.vscode-eslint", // ESLint integration for code linting
+        "bradlc.vscode-tailwindcss", // Tailwind CSS IntelliSense and autocomplete
+        "ms-vscode.vscode-json", // JSON language support and validation
+        "ms-vscode.vscode-chrome-debug", // Chrome debugging for extension development
+        "formulahendry.auto-rename-tag", // Auto-rename paired HTML/JSX tags
+        "christian-kohler.path-intellisense", // Path autocomplete for imports
+        "ms-vscode.vscode-js-profile-flame", // JavaScript performance profiling
+        "ms-playwright.playwright", // Playwright testing framework support
+        "orta.vscode-jest" // Jest testing framework integration
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "typescript.preferences.importModuleSpecifier": "non-relative",
+        "typescript.suggest.autoImports": true,
+        "emmet.includeLanguages": {
+          "typescript": "html",
+          "typescriptreact": "html"
+        },
+        "tailwindCSS.experimental.classRegex": [
+          [
+            "cva\\(([^)]*)\\)",
+            "[\"'`]([^\"'`]*).*?[\"'`]"
+          ],
+          [
+            "cx\\(([^)]*)\\)",
+            "(?:'|\"|`)([^']*)(?:'|\"|`)"
+          ]
+        ]
+      }
+    }
+  },
+  "forwardPorts": [
+    3000,
+    9229
+  ],
+  "portsAttributes": {
+    "3000": {
+      "label": "Dev Server",
+      "onAutoForward": "notify"
+    },
+    "9229": {
+      "label": "Node Debug",
+      "onAutoForward": "silent"
+    }
+  },
+  "postCreateCommand": "yarn install",
+  "postStartCommand": "echo 'DevContainer ready! Run yarn dev or yarn dev:react to start development with auto-rebuild.'",
+  "mounts": [
+    "source=${localWorkspaceFolder}/build,target=${containerWorkspaceFolder}/build,type=bind"
+  ],
+  "remoteUser": "node",
+  "runArgs": [
+    "--init"
+  ],
+  "remoteEnv": {
+    "SSH_AUTH_SOCK": "/run/host-services/ssh-auth.sock"
+  },
+  "runServices": [
+    "ssh-agent"
+  ]
+}
