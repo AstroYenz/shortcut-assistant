@@ -1866,10 +1866,10 @@
     "@types/filesystem" "*"
     "@types/har-format" "*"
 
-"@types/chrome@^0.0.290":
-  version "0.0.290"
-  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.290.tgz#570e511360d1b92cf24773af0c3b23b6e1f13152"
-  integrity sha512-N92vsAdlwoWameDQ8D4K0EZXXvxsJ1+gJg+4TWjUUsZ6gpontVmwl1XVtysA3mso45Fcn5UPiX/yqiT8GcBV3A==
+"@types/chrome@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.1.4.tgz#74a3a6c892e2c5d0a98997c4f038cb67cfbb0fa9"
+  integrity sha512-vfISO7SPppN3OKVUqWujtZ4vux3nhDqKaHYEHgfQuPARHuWJ3jjyc1s13H0ckzEc86/neTkCl1TeW72UK6jYKA==
   dependencies:
     "@types/filesystem" "*"
     "@types/har-format" "*"
