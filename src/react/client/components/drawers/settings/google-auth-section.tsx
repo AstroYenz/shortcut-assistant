@@ -43,7 +43,13 @@ function GoogleAuthSection({ onAuthStatusChange }: GoogleAuthSectionProps): Reac
         updateAuthStatus('authenticated')
       }
       else {
-        updateAuthStatus('error', response.data.error)
+        // Handle both React and legacy response formats
+        const errorMessage = 'error' in response
+          ? response.error
+          : 'message' in response
+            ? response.message
+            : 'Unknown error occurred'
+        updateAuthStatus('error', errorMessage)
       }
     }
     catch (error) {
