@@ -41,9 +41,9 @@ function FAB(): React.ReactElement {
   async function handleAddLabels(): Promise<void> {
     setIsOpen(false)
     try {
-      const response = await chrome.runtime.sendMessage({ action: 'addLabels' })
-      console.log('Labels added:', response)
-    } catch (error) {
+      await chrome.runtime.sendMessage({ action: 'addLabels' })
+    }
+    catch (error) {
       console.error('Error adding labels:', error)
     }
   }
