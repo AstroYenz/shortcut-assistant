@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { analyzeStoryReact } from '@/bridge'
 import { Button } from '@/client/components/ui/button'
@@ -103,10 +103,10 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
 
   const getButtonText = (): string => {
     switch (analysisStatus) {
-      case 'loading': return analysisType === 'analyze' ? 'Analyzing...' : 'Breaking Up...'
-      case 'success': return analysisType === 'analyze' ? 'Analyze Again' : 'Break Up Again'
-      case 'error': return 'Retry'
-      default: return analysisType === 'analyze' ? 'Analyze Story' : 'Break Up Story'
+    case 'loading': return analysisType === 'analyze' ? 'Analyzing...' : 'Breaking Up...'
+    case 'success': return analysisType === 'analyze' ? 'Analyze Again' : 'Break Up Again'
+    case 'error': return 'Retry'
+    default: return analysisType === 'analyze' ? 'Analyze Story' : 'Break Up Story'
     }
   }
 
