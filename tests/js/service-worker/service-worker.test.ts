@@ -3,15 +3,12 @@ import { chrome } from 'jest-chrome'
 import { sendEvent } from '@sx/analytics/event'
 import {
   handleGetSavedNotes,
-  handleOpenAICall
 } from '@sx/service-worker/handlers'
 
-import Tab = chrome.tabs.Tab
 import ManifestV3 = chrome.runtime.ManifestV3
 
 
 jest.mock('@sx/service-worker/handlers', () => ({
-  handleOpenAICall: jest.fn().mockResolvedValue({ data: 'mock' }),
   handleGetSavedNotes: jest.fn().mockResolvedValue({ data: 'mock' }),
 }))
 
@@ -37,22 +34,6 @@ describe('chrome.runtime.onMessage listener', () => {
     jest.clearAllMocks()
   })
 
-  it('calls handleOpenAICall if action is "callOpenAI"', async () => {
-    const sendResponse = jest.fn()
-    const mockTabId = 123
-    const mockPrompt = 'How to use Jest with TypeScript?'
-
-
-    chrome.runtime.onMessage.callListeners({
-      action: 'callOpenAI',
-      data: { prompt: mockPrompt }
-    }, { tab: { id: mockTabId, index: 0, pinned: false, windowId: 1, active: true } as Tab }, sendResponse)
-
-    expect(handleOpenAICall).toHaveBeenCalledWith(mockPrompt, undefined, mockTabId)
-    await new Promise(process.nextTick) // Wait for all promises to resolve
-    expect(sendResponse).toHaveBeenCalled()
-  })
-
   it('handles missing tab information correctly', () => {
     const sendResponse = jest.fn()
     chrome.runtime.onMessage.callListeners({
@@ -61,7 +42,6 @@ describe('chrome.runtime.onMessage listener', () => {
     }, {}, sendResponse)
 
     expect(sendResponse).not.toHaveBeenCalled()
-    expect(handleOpenAICall).not.toHaveBeenCalled()
   })
 
   it('calls handleGetSavedNotes when action is "getSavedNotes"', async () => {

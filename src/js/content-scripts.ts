@@ -34,18 +34,8 @@ export async function activate(): Promise<void> {
     logError(e as Error)
   }
   new NotesButton()
-  // Check if React is enabled in the build
-  const isReactEnabled = process.env.ENABLE_REACT === 'true'
 
-  // Initialize React components if compiled into the build
-  if (isReactEnabled) {
-    try {
-      initializeReactBridge()
-    }
-    catch (e) {
-      logError(e as Error)
-    }
-  }
+  initializeReactBridge()
 }
 
 export async function handleMessage(request: { message: string, url: string }): Promise<void> {
@@ -63,12 +53,8 @@ export async function handleMessage(request: { message: string, url: string }): 
     }
     new NotesButton()
 
-    const isReactEnabled = process.env.ENABLE_REACT === 'true'
-    // Re-initialize React components if compiled into the build
-    if (isReactEnabled) {
-      cleanupReactBridge()
-      initializeReactBridge()
-    }
+    cleanupReactBridge()
+    initializeReactBridge()
   }
   if (request.message === 'change-state') {
     await changeState()

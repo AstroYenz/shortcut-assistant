@@ -11,11 +11,6 @@ This document describes the new React-based architecture for the Shortcut Story 
 - All communication happens asynchronously via `chrome.runtime.sendMessage`
 - Bridge pattern provides clean separation of concerns
 
-### 2. Feature Flag Protection
-- Entire React architecture is wrapped in `ENABLE_REACT` environment variable check
-- Legacy functionality remains fully intact when React is disabled
-- Allows for gradual rollout and easy rollback
-
 ### 3. State Management
 - `StoryProvider` context manages story data throughout the React app
 - `useStoryContext` hook provides access to story information
@@ -79,11 +74,6 @@ src/react/client/features/
 
 ## Integration Points
 
-### Content Script Integration
-- React bridge initializes only when `ENABLE_REACT=true`
-- Coexists with existing content script functionality
-- Clean separation ensures no conflicts
-
 ### Legacy Functionality Preservation
 - All existing keyboard shortcuts work unchanged
 - Traditional button-based UI remains functional
@@ -124,7 +114,6 @@ src/react/client/features/
 ## Troubleshooting
 
 ### Common Issues
-- **React not loading**: Check `ENABLE_REACT` environment variable
 - **Bridge communication failing**: Verify message handlers in content bridge
 - **Story data not loading**: Ensure DOM elements are available when context initializes
 
