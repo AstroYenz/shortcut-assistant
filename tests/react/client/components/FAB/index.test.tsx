@@ -22,11 +22,18 @@ jest.mock('@/client/components/shortcut-assistant-modal', () => ({
     onOpenChange: (open: boolean) => void
     initialView: 'analyze' | 'breakdown'
   }) {
-    return open ? (
-      <div data-testid="mock-modal" data-initial-view={initialView}>
-        <button onClick={() => onOpenChange(false)}>Close Modal</button>
-      </div>
-    ) : null
+    return open
+      ? (
+        <div data-testid="mock-modal" data-initial-view={initialView}>
+          <button onClick={() => {
+            onOpenChange(false)
+          }}
+          >
+            Close Modal
+          </button>
+        </div>
+      )
+      : null
   }
 }))
 
