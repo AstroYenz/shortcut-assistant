@@ -30,6 +30,7 @@ function FAB(): React.ReactElement {
 
   function handleOpenAnalyze(): void {
     setOpenModal('analyze')
+    console.log('handleOpenAnalyze')
     setIsOpen(false)
   }
 

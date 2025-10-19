@@ -31,6 +31,11 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
   const [currentRequestId, setCurrentRequestId] = useState<string | null>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
+  // Auto-start analysis when component mounts
+  useEffect(() => {
+    handleAnalyzeStory()
+  }, [])
+
   useEffect(() => {
     // Subscribe to React-specific AI streaming results
     const subscribeToReactAIResults = (window as Window & { __subscribeToReactAIResults?: (callback: (message: ReactAIStreamMessage) => void) => () => void }).__subscribeToReactAIResults

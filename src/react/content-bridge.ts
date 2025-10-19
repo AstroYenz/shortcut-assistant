@@ -230,31 +230,6 @@ chrome.runtime.onMessage.addListener(async (message, _sender, _sendResponse) => 
     return true // Keep message channel open
   }
 
-  // ==================== LEGACY AI MESSAGES ====================
-
-  // Handle legacy AI processing messages (during transition period)
-  if (message.status !== undefined) {
-    const { AiProcessMessageType } = await import('@sx/analyze/types/AiProcessMessage')
-
-    // Legacy AI analysis listener functionality
-    if (message.status === AiProcessMessageType.updated
-      || message.status === AiProcessMessageType.completed
-      || message.status === AiProcessMessageType.failed) {
-      // Handle legacy AI functions (buttons, UI updates)
-      const { AiFunctions } = await import('@sx/analyze/ai-functions')
-      const functions = new AiFunctions()
-      await functions.processOpenAIResponse(message)
-
-      // Handle legacy additional content population
-      if (message.status === AiProcessMessageType.updated && message.data) {
-        const { AdditionalContent } = await import('@sx/additional-content/content-script')
-        AdditionalContent.populate(message.data.content)
-      }
-
-      return true
-    }
-  }
-
   // ==================== GENERAL CONTENT SCRIPT MESSAGES ====================
 
   // Handle general content script messages (update, state changes, etc.)

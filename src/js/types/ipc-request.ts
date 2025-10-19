@@ -1,7 +1,4 @@
-import { AiPromptType } from '@sx/analyze/types/ai-prompt-type'
-
-
-type IpcAction = 'callOpenAI' | 'reactCallOpenAI' | 'getSavedNotes' | 'sendEvent' | 'saveUserToken' | 'addLabels' | 'initiateGoogleOAuth' | 'processShortcutApiToken'
+type IpcAction = 'reactCallOpenAI' | 'getSavedNotes' | 'sendEvent' | 'saveUserToken' | 'addLabels' | 'initiateGoogleOAuth' | 'processShortcutApiToken'
 
 interface IpcRequestBase {
   action: IpcAction
@@ -13,14 +10,9 @@ interface IpcRequestSendEvent extends IpcRequestBase {
   data: { eventName: string, params?: Record<string, string> }
 }
 
-interface IpcRequestCallOpenAI extends IpcRequestBase {
-  action: 'callOpenAI'
-  data: { prompt: string, type: AiPromptType }
-}
-
 interface IpcRequestReactCallOpenAI extends IpcRequestBase {
   action: 'reactCallOpenAI'
-  data: { prompt: string, type: AiPromptType, requestId: string }
+  data: { prompt: string, type: string, requestId: string }
 }
 
 interface IpcRequestGetSavedNotes extends IpcRequestBase {
@@ -44,7 +36,6 @@ interface IpcRequestProcessShortcutApiToken extends IpcRequestBase {
 
 type IpcRequest =
   | IpcRequestSendEvent
-  | IpcRequestCallOpenAI
   | IpcRequestReactCallOpenAI
   | IpcRequestGetSavedNotes
   | IpcRequestSaveUserToken
@@ -55,7 +46,6 @@ export default IpcRequest
 export {
   IpcAction,
   IpcRequestBase,
-  IpcRequestCallOpenAI,
   IpcRequestReactCallOpenAI,
   IpcRequestGetSavedNotes,
   IpcRequestSaveUserToken,

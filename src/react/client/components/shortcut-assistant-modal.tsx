@@ -1,4 +1,3 @@
-import { Settings as SettingsIcon } from 'lucide-react'
 import React, { useState } from 'react'
 
 import { Settings } from '@/client/components/drawers/settings'
@@ -39,16 +38,6 @@ function ShortcutAssistantModal({ open, onOpenChange, initialView }: ShortcutAss
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold">Shortcut Story Assistant</h1>
-          <button
-            onClick={() => {
-              handleViewChange('settings')
-            }}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-100"
-            aria-label="Open Settings"
-            title="Settings"
-          >
-            <SettingsIcon size={20} />
-          </button>
         </div>
 
         <div className="space-y-3">
@@ -133,14 +122,14 @@ function ShortcutAssistantModal({ open, onOpenChange, initialView }: ShortcutAss
 
   function renderCurrentView(): React.ReactElement {
     switch (currentView) {
-    case 'analyze':
-      return renderAnalyzeView()
-    case 'breakdown':
-      return renderBreakdownView()
-    case 'settings':
-      return renderSettingsView()
-    default:
-      return renderMainView()
+      case 'analyze':
+        return renderAnalyzeView()
+      case 'breakdown':
+        return renderBreakdownView()
+      case 'settings':
+        return renderSettingsView()
+      default:
+        return renderMainView()
     }
   }
 

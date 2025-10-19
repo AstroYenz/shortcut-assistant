@@ -1,7 +1,7 @@
 import { sendEvent } from '@sx/analytics/event'
+import { AiPromptType } from '@sx/analyze/types/ai-prompt-type'
 import {
   handleGetSavedNotes,
-  handleOpenAICall,
   handleReactOpenAICall
 } from '@sx/service-worker/handlers'
 import IpcRequest from '@sx/types/ipc-request'
@@ -14,16 +14,9 @@ import '@sx/ai/labels/listener'
  * while keeping auth and labels as separate imports for now.
  */
 chrome.runtime.onMessage.addListener((request: IpcRequest, sender: chrome.runtime.MessageSender, sendResponse: (response: unknown) => void) => {
-  // AI Processing (Legacy + React)
-  if (request.action === 'callOpenAI') {
-    if (!sender.tab?.id) return false
-    handleOpenAICall(request.data.prompt, request.data.type, sender.tab.id).then(sendResponse)
-    return true
-  }
-
   if (request.action === 'reactCallOpenAI') {
     if (!sender.tab?.id) return false
-    handleReactOpenAICall(request.data.prompt, request.data.type, request.data.requestId, sender.tab.id).then(sendResponse)
+    handleReactOpenAICall(request.data.prompt, request.data.type as AiPromptType, request.data.requestId, sender.tab.id).then(sendResponse)
     return true
   }
 
