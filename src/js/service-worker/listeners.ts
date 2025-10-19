@@ -1,51 +1,53 @@
 import { sendEvent } from '@sx/analytics/event'
+import { AiPromptType } from '@sx/analyze/types/ai-prompt-type'
 import {
   handleGetSavedNotes,
-  handleOpenAICall
+  handleReactOpenAICall
 } from '@sx/service-worker/handlers'
 import IpcRequest from '@sx/types/ipc-request'
 import '@sx/auth/oauth/service-worker/listener'
 import '@sx/ai/labels/listener'
 
+/**
+ * CONSOLIDATED SERVICE WORKER LISTENERS
+ * This consolidates the main AI, Notes, and Analytics listeners into one place
+ * while keeping auth and labels as separate imports for now.
+ */
+chrome.runtime.onMessage.addListener((request: IpcRequest, sender: chrome.runtime.MessageSender, sendResponse: (response: unknown) => void) => {
+  if (request.action === 'reactCallOpenAI') {
+    if (!sender.tab?.id) return false
+    handleReactOpenAICall(request.data.prompt, request.data.type as AiPromptType, request.data.requestId, sender.tab.id).then(sendResponse)
+    return true
+  }
 
+  // Notes
+  if (request.action === 'getSavedNotes') {
+    handleGetSavedNotes().then(sendResponse)
+    return true
+  }
 
+  // Analytics
+  if (request.action === 'sendEvent') {
+    sendEvent(request.data.eventName, request.data.params).catch((e) => {
+      console.error('Error sending event:', e)
+    })
+    return false
+  }
+
+  return false
+})
+
+// Legacy functions for backward compatibility
 function registerAiListeners(): void {
-  chrome.runtime.onMessage.addListener((request: IpcRequest, sender: chrome.runtime.MessageSender, sendResponse: (response: unknown) => void) => {
-    if (request.action === 'callOpenAI') {
-      if (!sender.tab || !sender.tab.id) {
-        return
-      }
-      handleOpenAICall(request.data.prompt, request.data.type, sender.tab.id).then(sendResponse)
-      return true // Keep the message channel open for the async response
-    }
-  })
-}
-
-function registerNotesListeners(): void {
-  chrome.runtime.onMessage.addListener((request: IpcRequest, sender: chrome.runtime.MessageSender, sendResponse: (response: unknown) => void) => {
-    if (request.action === 'getSavedNotes') {
-      handleGetSavedNotes().then(sendResponse)
-      return true
-    }
-  })
+  // Now handled by consolidated listener above
 }
 
 function registerAnalyticsListeners(): void {
-  chrome.runtime.onMessage.addListener((request: IpcRequest) => {
-    if (request.action === 'sendEvent') {
-      sendEvent(request.data.eventName, request.data.params).catch((e) => {
-        console.error('Error sending event:', e)
-      })
-    }
-  })
+  // Now handled by consolidated listener above
 }
 
-function registerListeners(): void {
-  registerAiListeners()
-  registerAnalyticsListeners()
-  registerNotesListeners()
+function registerNotesListeners(): void {
+  // Now handled by consolidated listener above
 }
 
 export { registerAiListeners, registerAnalyticsListeners, registerNotesListeners }
-
-registerListeners()

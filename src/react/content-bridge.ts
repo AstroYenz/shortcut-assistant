@@ -1,6 +1,17 @@
 /**
  * Handles messages from the React page script to content script
  * Sets up message listeners and provides handlers for React communication
+ *
+ * UNIFIED MESSAGE ROUTING:
+ * This file consolidates ALL content script message handling to prevent conflicts:
+ * - React AI streaming messages (react-ai-stream)
+ * - Legacy AI processing messages (AiProcessMessage with status)
+ * - General content script messages (update, state changes, etc.)
+ *
+ * Replaced listeners from:
+ * - src/js/analyze/listeners.ts
+ * - src/js/additional-content/content-script.ts
+ * - src/js/content-scripts.ts
  */
 function setupReactMessageListener(): void {
   // Listen for messages from the page script (React)
@@ -25,6 +36,12 @@ function setupReactMessageListener(): void {
       handleMessageAction(
         () => handleInitiateGoogleOAuth(),
         'Failed to authenticate with Google'
+      )
+    }
+    else if (payload?.action === 'reactCallOpenAI') {
+      handleMessageAction(
+        () => handleReactCallOpenAI(payload.data.description, payload.data.type, payload.data.timestamp),
+        'Failed to call OpenAI for React'
       )
     }
 
@@ -125,8 +142,108 @@ async function handleInitiateGoogleOAuth(): Promise<{ success: boolean, message:
   }
 }
 
+/**
+ * Handle React-specific OpenAI call - completely separate from legacy JS system
+ */
+async function handleReactCallOpenAI(description: string, type: 'analyze' | 'breakup', timestamp: number): Promise<{ success: boolean, message: string, error?: string, requestId?: string }> {
+  try {
+    return new Promise((resolve, reject) => {
+      const requestId = `react-${type}-${timestamp}`
+
+      // Send to React-specific service worker handler
+      chrome.runtime.sendMessage({
+        action: 'reactCallOpenAI',
+        data: { prompt: description, type, requestId }
+      }, (response) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message || 'Unknown error during React OpenAI call'))
+          return
+        }
+
+        resolve({
+          success: true,
+          message: 'React OpenAI request initiated successfully',
+          requestId,
+          error: response?.error
+        })
+      })
+    })
+  }
+  catch (error) {
+    console.error('Error in handleReactCallOpenAI:', error)
+    throw error
+  }
+}
+
 // Flag to track if bridge is initialized
 let isBridgeInitialized = false
+
+// React-specific streaming results system - completely separate from legacy
+const reactAIResultsListeners: ((message: ReactAIStreamMessage) => void)[] = []
+
+interface ReactAIStreamMessage {
+  type: 'react-ai-stream'
+  requestId: string
+  status: 'streaming' | 'completed' | 'error'
+  content?: string
+  error?: string
+  analysisType: 'analyze' | 'breakup'
+}
+
+/**
+ * Subscribe to React-specific AI streaming results
+ */
+function subscribeToReactAIResults(callback: (message: ReactAIStreamMessage) => void): () => void {
+  reactAIResultsListeners.push(callback)
+  return () => {
+    const index = reactAIResultsListeners.indexOf(callback)
+    if (index > -1) {
+      reactAIResultsListeners.splice(index, 1)
+    }
+  }
+}
+
+// Expose globally for React components
+(window as Window & { __subscribeToReactAIResults?: typeof subscribeToReactAIResults }).__subscribeToReactAIResults = subscribeToReactAIResults
+
+/**
+ * Handle React AI streaming results from service worker
+ */
+function handleReactAIStreamingResults(message: ReactAIStreamMessage): void {
+  // Forward streaming results to React components only
+  reactAIResultsListeners.forEach((callback) => {
+    callback(message)
+  })
+}
+
+/**
+ * UNIFIED MESSAGE ROUTER
+ * Consolidates all content script message handling in one place
+ * Routes messages to appropriate handlers based on message type
+ */
+chrome.runtime.onMessage.addListener(async (message, _sender, _sendResponse) => {
+  // ==================== REACT-SPECIFIC MESSAGES ====================
+
+  // Handle React AI streaming results from service worker
+  if (message.type === 'react-ai-stream') {
+    handleReactAIStreamingResults(message as ReactAIStreamMessage)
+    return true // Keep message channel open
+  }
+
+  // ==================== GENERAL CONTENT SCRIPT MESSAGES ====================
+
+  // Handle general content script messages (update, state changes, etc.)
+  if (message.message) {
+    const { handleMessage } = await import('@sx/content-scripts')
+    await handleMessage(message)
+    return true
+  }
+
+  // ==================== UNHANDLED MESSAGES ====================
+
+  // Return false for unhandled messages (allows other listeners to handle them)
+  return false
+})
 
 /**
  * Initialize React components and set up message listeners
@@ -180,5 +297,7 @@ export {
   cleanupReactBridge,
   setupReactMessageListener,
   handleSubmitShortcutApiToken,
-  handleInitiateGoogleOAuth
+  handleInitiateGoogleOAuth,
+  handleReactCallOpenAI,
+  subscribeToReactAIResults
 }

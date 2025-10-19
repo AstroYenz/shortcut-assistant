@@ -11,7 +11,6 @@ module.exports = {
   devtool: process.env.NODE_ENV === 'development' ? 'inline-source-map' : 'source-map',
 
   entry: {
-    'js/analyze/analyze': './src/js/analyze/listeners.ts',
     'js/popup/bundle': [
       './src/js/popup/popup.ts',
       './src/js/popup/notes-popup.ts',

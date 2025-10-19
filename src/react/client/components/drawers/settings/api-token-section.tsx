@@ -21,7 +21,7 @@ function ApiTokenSection({
 }: ApiTokenSectionProps): React.ReactElement {
   return (
     <div className="space-y-4">
-      <h3 className="font-medium text-sm">Step 2: Add Shortcut API Token</h3>
+      <h3 className="font-medium text-sm text-foreground">Step 2: Add Shortcut API Token</h3>
       <div className="flex items-center space-x-2">
         <Input
           name="apiKey"
@@ -32,7 +32,7 @@ function ApiTokenSection({
           type="password"
         />
       </div>
-      <p className="text-gray-400 text-xs">
+      <p className="text-muted-foreground text-xs">
         {googleAuthStatus !== 'authenticated'
           ? 'Please complete Google authentication first.'
           : hasStoredToken
