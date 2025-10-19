@@ -122,14 +122,14 @@ function ShortcutAssistantModal({ open, onOpenChange, initialView }: ShortcutAss
 
   function renderCurrentView(): React.ReactElement {
     switch (currentView) {
-      case 'analyze':
-        return renderAnalyzeView()
-      case 'breakdown':
-        return renderBreakdownView()
-      case 'settings':
-        return renderSettingsView()
-      default:
-        return renderMainView()
+    case 'analyze':
+      return renderAnalyzeView()
+    case 'breakdown':
+      return renderBreakdownView()
+    case 'settings':
+      return renderSettingsView()
+    default:
+      return renderMainView()
     }
   }
 

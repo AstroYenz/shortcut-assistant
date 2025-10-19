@@ -1,4 +1,3 @@
-import { ChevronDown } from 'lucide-react'
 import React, { useState, useEffect, useRef } from 'react'
 
 import { analyzeStoryReact } from '@/bridge'
@@ -29,7 +28,6 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
   const [streamingContent, setStreamingContent] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
   const [currentRequestId, setCurrentRequestId] = useState<string | null>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
 
   // Auto-start analysis when component mounts
   useEffect(() => {
@@ -40,38 +38,26 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
     // Subscribe to React-specific AI streaming results
     const subscribeToReactAIResults = (window as Window & { __subscribeToReactAIResults?: (callback: (message: ReactAIStreamMessage) => void) => () => void }).__subscribeToReactAIResults
     if (!subscribeToReactAIResults) {
-      console.log('❌ __subscribeToReactAIResults not found on window')
       return
     }
 
-    console.log('🔔 Setting up React AI results subscription')
     const unsubscribe = subscribeToReactAIResults((message: ReactAIStreamMessage) => {
-      console.log('📨 React component received message:', message)
-      console.log('🎯 Current requestId:', currentRequestId, 'Message requestId:', message.requestId)
-      console.log('🏷️ Analysis type match:', analysisType, 'vs', message.analysisType)
-
       // Only handle messages for our current request and analysis type
       if (message.requestId === currentRequestId && message.analysisType === analysisType) {
-        console.log('✅ Message matches current request - processing...')
         if (message.status === 'streaming') {
-          console.log('📝 Setting streaming content:', message.content?.substring(0, 100) + '...')
           // Set the complete accumulated content from the message
           setStreamingContent(message.content || '')
         }
         else if (message.status === 'completed') {
-          console.log('🎉 Analysis completed')
           setAnalysisStatus('success')
           // Set the final complete content
           setStreamingContent(message.content || '')
         }
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         else if (message.status === 'error') {
-          console.log('💥 Analysis error:', message.error)
           setAnalysisStatus('error')
           setError(message.error || 'Analysis failed')
         }
-      }
-      else {
-        console.log('⏭️ Message does not match current request - ignoring')
       }
     })
 
@@ -91,13 +77,10 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
     // Generate requestId before making the call to avoid timing issues
     const timestamp = Date.now()
     const requestId = `react-${analysisType}-${timestamp}`
-    console.log('🎯 Setting requestId before API call:', requestId)
     setCurrentRequestId(requestId)
 
     try {
-      console.log('story.description', story.description)
-      const response = await analyzeStoryReact(story.description, analysisType, timestamp)
-      console.log('response', response)
+      const response = await analyzeStoryReact(story.description || '', analysisType, timestamp)
       if (!response.success) {
         setError(response.error || 'Failed to start analysis')
         setAnalysisStatus('error')
@@ -166,7 +149,7 @@ function AnalyzeStoryModal({ onClose, analysisType }: AnalyzeStoryModalProps): R
             <ScrollArea
               className="text-sm text-gray-300 whitespace-pre-wrap pr-2 pb-8 min-h-[100px] h-72"
             >
-              {streamingContent || (analysisStatus === 'loading' ? 'Processing...' : '')}
+              {streamingContent || (analysisStatus === 'loading' && 'Processing...')}
             </ScrollArea>
           </div>
         )}

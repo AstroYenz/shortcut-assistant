@@ -30,7 +30,6 @@ function FAB(): React.ReactElement {
 
   function handleOpenAnalyze(): void {
     setOpenModal('analyze')
-    console.log('handleOpenAnalyze')
     setIsOpen(false)
   }
 
@@ -94,7 +93,7 @@ function FAB(): React.ReactElement {
       />
       {openModal && (
         <ShortcutAssistantModal
-          open={!!openModal}
+          open={true}
           onOpenChange={handleModalChange}
           initialView={openModal}
         />
