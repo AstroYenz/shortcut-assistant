@@ -63,7 +63,7 @@ function GoogleAuthSection({ onAuthStatusChange }: GoogleAuthSectionProps): Reac
 
   return (
     <div className="space-y-4">
-      <h3 className="font-medium text-sm">Step 1: Authenticate with Google</h3>
+      <h3 className="font-medium text-sm text-foreground">Step 1: Authenticate with Google</h3>
       <Button
         onClick={handleGoogleAuth}
         disabled={authStatus === 'loading' || authStatus === 'authenticated'}
@@ -74,7 +74,7 @@ function GoogleAuthSection({ onAuthStatusChange }: GoogleAuthSectionProps): Reac
       >
         {buttonText}
       </Button>
-      <p className="text-gray-400 text-xs">
+      <p className="text-muted-foreground text-xs">
         We need to verify your Google account before enabling advanced features.
       </p>
     </div>

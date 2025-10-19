@@ -1,5 +1,4 @@
-import { AiFunctions } from '@sx/analyze/ai-functions'
-import { analyzeStoryDescription } from '@sx/analyze/analyze-story-description'
+
 import { activate, handleMessage } from '@sx/content-scripts'
 import { CycleTime } from '@sx/cycle-time/cycle-time'
 import { DevelopmentTime } from '@sx/development-time/development-time'
@@ -21,11 +20,6 @@ jest.mock('@sx/cycle-time/cycle-time', () => ({
     set: jest.fn().mockResolvedValue(null)
   }
 }))
-jest.mock('@sx/analyze/analyze-story-description', () => {
-  return {
-    analyzeStoryDescription: jest.fn().mockResolvedValue(null)
-  }
-})
 
 jest.mock('@sx/notes/notes-button', () => {
   return {
@@ -70,14 +64,12 @@ describe('activate function', () => {
   it('should activate features', async () => {
     const developmentTime = jest.spyOn(DevelopmentTime, 'set').mockResolvedValue()
     const cycleTime = jest.spyOn(CycleTime, 'set').mockResolvedValue()
-    const addButtons = jest.spyOn(AiFunctions.prototype, 'addButtons').mockResolvedValue()
 
     await activate()
 
     expect(Story.isReady).toHaveBeenCalled()
     expect(developmentTime).toHaveBeenCalled()
     expect(cycleTime).toHaveBeenCalled()
-    expect(addButtons).toHaveBeenCalled()
   })
 })
 
@@ -107,14 +99,7 @@ describe('handleMessage function', () => {
   })
 
 
-  it('calls analyzeStoryDescription for analyzeStoryDescription message', async () => {
-    const request = { message: 'analyzeStoryDescription', url: '' }
-    await handleMessage(request)
-    expect(analyzeStoryDescription).toHaveBeenCalledWith('https://example.com/story')
-  })
-
   it('initializes on update message', async () => {
-    // const spy = jest.spyOn(AiFunctions.prototype, 'addButtons')
     mockedGetSyncedSetting.mockResolvedValue(true)
     const request = { message: 'update', url: 'https://example.com/story' }
     await handleMessage(request)

@@ -1,13 +1,9 @@
-import callOpenAi from '@sx/ai/call-openai'
-import { handleCommands, handleOpenAICall } from '@sx/service-worker/handlers'
+import { handleCommands } from '@sx/service-worker/handlers'
 
 
-jest.mock('@sx/ai/call-openai')
 jest.mock('@sx/analytics/event', () => ({
   sendEvent: jest.fn().mockResolvedValue({}),
 }))
-
-const mockCallOpenAi = callOpenAi as jest.MockedFunction<typeof callOpenAi>
 
 const sendMessage = jest.fn()
 global.chrome = {
@@ -17,24 +13,6 @@ global.chrome = {
     sendMessage: sendMessage
   } as unknown as typeof chrome.tabs
 }
-
-describe('Handle OpenAI Call', () => {
-  it('should call callOpenAi with the prompt and tabId', async () => {
-    const prompt = 'prompt'
-    const tabId = 123
-    await handleOpenAICall(prompt, 'analyze', tabId)
-    expect(mockCallOpenAi).toHaveBeenCalledWith(prompt, 'analyze', tabId)
-  })
-
-  it('should return an error if callOpenAi throws an error', async () => {
-    const prompt = 'prompt'
-    const tabId = 123
-    const error = new Error('error')
-    mockCallOpenAi.mockRejectedValue(error)
-    const response = await handleOpenAICall(prompt, 'breakup', tabId)
-    expect(response).toEqual({ error })
-  })
-})
 
 describe('Handle Get OpenAI Token', () => {
   it('should call getOpenAiToken and return the token', async () => {

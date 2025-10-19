@@ -1,6 +1,3 @@
-import { AiProcessMessage, AiProcessMessageType } from '@sx/analyze/types/AiProcessMessage'
-
-
 export class AdditionalContent {
   static populate(text?: string): void {
     if (text === undefined) {
@@ -44,9 +41,5 @@ export class AdditionalContent {
   }
 }
 
-
-chrome.runtime.onMessage.addListener((request: AiProcessMessage) => {
-  if (request.status === AiProcessMessageType.updated && request.data) {
-    AdditionalContent.populate(request.data.content)
-  }
-})
+// NOTE: Message listener moved to unified router in content-bridge.ts
+// AdditionalContent.populate() is now called by the unified router
