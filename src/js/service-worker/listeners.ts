@@ -7,6 +7,7 @@ import {
 import IpcRequest from '@sx/types/ipc-request'
 import '@sx/auth/oauth/service-worker/listener'
 import '@sx/ai/labels/listener'
+import '@/service-worker/auth/listeners'
 
 /**
  * CONSOLIDATED SERVICE WORKER LISTENERS

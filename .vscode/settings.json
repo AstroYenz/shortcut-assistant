@@ -1,13 +1,42 @@
 {
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+      "source.fixAll.eslint": "always"
   },
-  "eslint.format.enable": true,
-  "editor.tabSize": 2,
-  "editor.insertSpaces": true,
-  "editor.detectIndentation": false,
-  "typescript.preferences.quoteStyle": "single",
-  "javascript.preferences.quoteStyle": "single"
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": null,
+  "[typescript]": {
+      "editor.formatOnSave": false,
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescriptreact]": {
+      "editor.formatOnSave": false,
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascript]": {
+      "editor.formatOnSave": false,
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascriptreact]": {
+      "editor.formatOnSave": false,
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact"
+  ],
+  "scm.workingSets.enabled": true,
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "search.exclude": {
+      "**/.yarn": true,
+      "**/.pnp.*": true
+  },
+  "doppler.autocomplete.enable": true,
+  "doppler.hover.enable": true,
+  "cSpell.words": [
+      "Supabase",
+      "unestimated"
+  ]
 }

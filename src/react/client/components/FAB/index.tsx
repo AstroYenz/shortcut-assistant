@@ -38,6 +38,16 @@ function FAB(): React.ReactElement {
     setIsOpen(false)
   }
 
+  async function handleAddLabels(): Promise<void> {
+    setIsOpen(false)
+    try {
+      await chrome.runtime.sendMessage({ action: 'addLabels' })
+    }
+    catch (error) {
+      console.error('Error adding labels:', error)
+    }
+  }
+
   function handleModalChange(open: boolean): void {
     if (!open) {
       setOpenModal(null)
@@ -73,7 +83,12 @@ function FAB(): React.ReactElement {
             >
               Break Down
             </button>
-            <button className="shortcut-assistant-fab-menu-item">Add Labels</button>
+            <button
+              className="shortcut-assistant-fab-menu-item"
+              onClick={handleAddLabels}
+            >
+              Add Labels
+            </button>
             <button
               className="shortcut-assistant-fab-menu-item"
               onClick={handleOpenSettings}
