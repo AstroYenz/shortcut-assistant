@@ -1,8 +1,23 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import React from 'react'
+import { toast } from 'sonner'
 
 import FAB from '@/client/components/FAB'
+import * as authCheck from '@/client/lib/auth-check'
 
+
+// Mock sonner toast
+jest.mock('sonner', () => ({
+  toast: {
+    info: jest.fn()
+  },
+  Toaster: function MockToaster() {
+    return <div data-testid="mock-toaster" />
+  }
+}))
+
+// Mock auth-check
+jest.mock('@/client/lib/auth-check')
 
 // Mock Drawers to avoid rendering the full settings drawer
 jest.mock('@/client/components/drawers', () => ({
@@ -49,6 +64,8 @@ Object.defineProperty(global, 'chrome', {
 })
 
 describe('FAB', function testFABSuite() {
+  const mockCheckAuthentication = jest.mocked(authCheck.checkAuthentication)
+
   function setup() {
     return render(<FAB />)
   }
@@ -56,6 +73,12 @@ describe('FAB', function testFABSuite() {
   beforeEach(() => {
     jest.clearAllMocks()
     mockSendMessage.mockResolvedValue(undefined)
+    // Default to authenticated state for existing tests
+    mockCheckAuthentication.mockResolvedValue({
+      isAuthenticated: true,
+      hasGoogleAuth: true,
+      hasShortcutToken: true
+    })
   })
 
   describe('Initial rendering', () => {
@@ -112,7 +135,7 @@ describe('FAB', function testFABSuite() {
   })
 
   describe('Analyze button', () => {
-    it('opens the analyze modal when Analyze button is clicked', function testOpenAnalyzeModal() {
+    it('opens the analyze modal when Analyze button is clicked', async function testOpenAnalyzeModal() {
       setup()
       const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
       fireEvent.click(fabButton)
@@ -120,12 +143,14 @@ describe('FAB', function testFABSuite() {
       const analyzeButton = screen.getByText('Analyze')
       fireEvent.click(analyzeButton)
 
-      const modal = screen.getByTestId('mock-modal')
-      expect(modal).toBeInTheDocument()
-      expect(modal).toHaveAttribute('data-initial-view', 'analyze')
+      await waitFor(() => {
+        const modal = screen.getByTestId('mock-modal')
+        expect(modal).toBeInTheDocument()
+        expect(modal).toHaveAttribute('data-initial-view', 'analyze')
+      })
     })
 
-    it('closes the FAB menu when Analyze button is clicked', function testClosesMenuOnAnalyze() {
+    it('closes the FAB menu when Analyze button is clicked', async function testClosesMenuOnAnalyze() {
       setup()
       const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
       fireEvent.click(fabButton)
@@ -133,13 +158,15 @@ describe('FAB', function testFABSuite() {
       const analyzeButton = screen.getByText('Analyze')
       fireEvent.click(analyzeButton)
 
-      expect(screen.queryByText('Analyze')).not.toBeInTheDocument()
-      expect(fabButton).not.toHaveClass('open')
+      await waitFor(() => {
+        expect(screen.queryByText('Analyze')).not.toBeInTheDocument()
+        expect(fabButton).not.toHaveClass('open')
+      })
     })
   })
 
   describe('Break Down button', () => {
-    it('opens the breakdown modal when Break Down button is clicked', function testOpenBreakdownModal() {
+    it('opens the breakdown modal when Break Down button is clicked', async function testOpenBreakdownModal() {
       setup()
       const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
       fireEvent.click(fabButton)
@@ -147,12 +174,14 @@ describe('FAB', function testFABSuite() {
       const breakdownButton = screen.getByText('Break Down')
       fireEvent.click(breakdownButton)
 
-      const modal = screen.getByTestId('mock-modal')
-      expect(modal).toBeInTheDocument()
-      expect(modal).toHaveAttribute('data-initial-view', 'breakdown')
+      await waitFor(() => {
+        const modal = screen.getByTestId('mock-modal')
+        expect(modal).toBeInTheDocument()
+        expect(modal).toHaveAttribute('data-initial-view', 'breakdown')
+      })
     })
 
-    it('closes the FAB menu when Break Down button is clicked', function testClosesMenuOnBreakdown() {
+    it('closes the FAB menu when Break Down button is clicked', async function testClosesMenuOnBreakdown() {
       setup()
       const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
       fireEvent.click(fabButton)
@@ -160,8 +189,10 @@ describe('FAB', function testFABSuite() {
       const breakdownButton = screen.getByText('Break Down')
       fireEvent.click(breakdownButton)
 
-      expect(screen.queryByText('Break Down')).not.toBeInTheDocument()
-      expect(fabButton).not.toHaveClass('open')
+      await waitFor(() => {
+        expect(screen.queryByText('Break Down')).not.toBeInTheDocument()
+        expect(fabButton).not.toHaveClass('open')
+      })
     })
   })
 
@@ -179,7 +210,7 @@ describe('FAB', function testFABSuite() {
       })
     })
 
-    it('closes the FAB menu when Add Labels button is clicked', function testClosesMenuOnAddLabels() {
+    it('closes the FAB menu when Add Labels button is clicked', async function testClosesMenuOnAddLabels() {
       setup()
       const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
       fireEvent.click(fabButton)
@@ -187,8 +218,10 @@ describe('FAB', function testFABSuite() {
       const addLabelsButton = screen.getByText('Add Labels')
       fireEvent.click(addLabelsButton)
 
-      expect(screen.queryByText('Add Labels')).not.toBeInTheDocument()
-      expect(fabButton).not.toHaveClass('open')
+      await waitFor(() => {
+        expect(screen.queryByText('Add Labels')).not.toBeInTheDocument()
+        expect(fabButton).not.toHaveClass('open')
+      })
     })
 
     it('handles errors when adding labels fails', async function testHandlesAddLabelsError() {
@@ -248,7 +281,7 @@ describe('FAB', function testFABSuite() {
   })
 
   describe('Modal integration', () => {
-    it('closes modal when onOpenChange is called with false', function testClosesModal() {
+    it('closes modal when onOpenChange is called with false', async function testClosesModal() {
       setup()
       const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
       fireEvent.click(fabButton)
@@ -256,7 +289,9 @@ describe('FAB', function testFABSuite() {
       const analyzeButton = screen.getByText('Analyze')
       fireEvent.click(analyzeButton)
 
-      expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+      })
 
       const closeButton = screen.getByText('Close Modal')
       fireEvent.click(closeButton)
@@ -264,14 +299,16 @@ describe('FAB', function testFABSuite() {
       expect(screen.queryByTestId('mock-modal')).not.toBeInTheDocument()
     })
 
-    it('can open different modals sequentially', function testOpenDifferentModals() {
+    it('can open different modals sequentially', async function testOpenDifferentModals() {
       setup()
       const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
 
       // Open analyze modal
       fireEvent.click(fabButton)
       fireEvent.click(screen.getByText('Analyze'))
-      expect(screen.getByTestId('mock-modal')).toHaveAttribute('data-initial-view', 'analyze')
+      await waitFor(() => {
+        expect(screen.getByTestId('mock-modal')).toHaveAttribute('data-initial-view', 'analyze')
+      })
 
       // Close modal
       fireEvent.click(screen.getByText('Close Modal'))
@@ -280,7 +317,9 @@ describe('FAB', function testFABSuite() {
       // Open breakdown modal
       fireEvent.click(fabButton)
       fireEvent.click(screen.getByText('Break Down'))
-      expect(screen.getByTestId('mock-modal')).toHaveAttribute('data-initial-view', 'breakdown')
+      await waitFor(() => {
+        expect(screen.getByTestId('mock-modal')).toHaveAttribute('data-initial-view', 'breakdown')
+      })
     })
   })
 
@@ -298,6 +337,146 @@ describe('FAB', function testFABSuite() {
       // Re-render should maintain the drawer state
       rerender(<FAB />)
       expect(screen.getByTestId('mock-drawers')).toBeInTheDocument()
+    })
+  })
+
+  describe('Authentication checks', () => {
+    describe('Analyze button', () => {
+      it('shows toast and opens settings when not authenticated', async function testAnalyzeAuthCheck() {
+        mockCheckAuthentication.mockResolvedValue({
+          isAuthenticated: false,
+          hasGoogleAuth: false,
+          hasShortcutToken: false
+        })
+
+        setup()
+        const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
+        fireEvent.click(fabButton)
+
+        const analyzeButton = screen.getByText('Analyze')
+        fireEvent.click(analyzeButton)
+
+        await waitFor(() => {
+          expect(toast.info).toHaveBeenCalledWith('Please authenticate in Settings to use AI features')
+          expect(screen.getByTestId('mock-drawers')).toHaveTextContent('settings')
+        })
+
+        // Should not open the modal
+        expect(screen.queryByTestId('mock-modal')).not.toBeInTheDocument()
+      })
+
+      it('opens modal when authenticated', async function testAnalyzeWhenAuthenticated() {
+        mockCheckAuthentication.mockResolvedValue({
+          isAuthenticated: true,
+          hasGoogleAuth: true,
+          hasShortcutToken: true
+        })
+
+        setup()
+        const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
+        fireEvent.click(fabButton)
+
+        const analyzeButton = screen.getByText('Analyze')
+        fireEvent.click(analyzeButton)
+
+        await waitFor(() => {
+          expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+        })
+
+        expect(toast.info).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('Break Down button', () => {
+      it('shows toast and opens settings when not authenticated', async function testBreakdownAuthCheck() {
+        mockCheckAuthentication.mockResolvedValue({
+          isAuthenticated: false,
+          hasGoogleAuth: false,
+          hasShortcutToken: false
+        })
+
+        setup()
+        const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
+        fireEvent.click(fabButton)
+
+        const breakdownButton = screen.getByText('Break Down')
+        fireEvent.click(breakdownButton)
+
+        await waitFor(() => {
+          expect(toast.info).toHaveBeenCalledWith('Please authenticate in Settings to use AI features')
+          expect(screen.getByTestId('mock-drawers')).toHaveTextContent('settings')
+        })
+
+        // Should not open the modal
+        expect(screen.queryByTestId('mock-modal')).not.toBeInTheDocument()
+      })
+
+      it('opens modal when authenticated', async function testBreakdownWhenAuthenticated() {
+        mockCheckAuthentication.mockResolvedValue({
+          isAuthenticated: true,
+          hasGoogleAuth: true,
+          hasShortcutToken: true
+        })
+
+        setup()
+        const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
+        fireEvent.click(fabButton)
+
+        const breakdownButton = screen.getByText('Break Down')
+        fireEvent.click(breakdownButton)
+
+        await waitFor(() => {
+          expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+        })
+
+        expect(toast.info).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('Add Labels button', () => {
+      it('shows toast and opens settings when not authenticated', async function testAddLabelsAuthCheck() {
+        mockCheckAuthentication.mockResolvedValue({
+          isAuthenticated: false,
+          hasGoogleAuth: false,
+          hasShortcutToken: false
+        })
+
+        setup()
+        const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
+        fireEvent.click(fabButton)
+
+        const addLabelsButton = screen.getByText('Add Labels')
+        fireEvent.click(addLabelsButton)
+
+        await waitFor(() => {
+          expect(toast.info).toHaveBeenCalledWith('Please authenticate in Settings to use AI features')
+          expect(screen.getByTestId('mock-drawers')).toHaveTextContent('settings')
+        })
+
+        // Should not send chrome message
+        expect(mockSendMessage).not.toHaveBeenCalled()
+      })
+
+      it('sends chrome message when authenticated', async function testAddLabelsWhenAuthenticated() {
+        mockCheckAuthentication.mockResolvedValue({
+          isAuthenticated: true,
+          hasGoogleAuth: true,
+          hasShortcutToken: true
+        })
+
+        setup()
+        const fabButton = screen.getByRole('button', { name: 'Toggle Shortcut Assistant' })
+        fireEvent.click(fabButton)
+
+        const addLabelsButton = screen.getByText('Add Labels')
+        fireEvent.click(addLabelsButton)
+
+        await waitFor(() => {
+          expect(mockSendMessage).toHaveBeenCalledWith({ action: 'addLabels' })
+        })
+
+        expect(toast.info).not.toHaveBeenCalled()
+      })
     })
   })
 })
