@@ -6,9 +6,9 @@ import '@/styles/globals.css'
 import './styles.css'
 import { Drawers } from '@/client/components/drawers'
 import { ShortcutAssistantModal } from '@/client/components/shortcut-assistant-modal'
-import { Toaster } from '@/components/ui/sonner'
 import { checkAuthentication } from '@/client/lib/auth-check'
 import { DrawerType } from '@/client/types/drawer'
+import { Toaster } from '@/components/ui/sonner'
 
 
 type ModalType = 'analyze' | 'breakdown' | null
