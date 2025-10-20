@@ -81,7 +81,7 @@ function GoogleAuthSection({ onAuthStatusChange }: GoogleAuthSectionProps): Reac
         {buttonText}
       </Button>
       <p className="text-muted-foreground text-xs">
-        We need to verify your Google account before enabling advanced features.
+        We need to verify your Google account before enabling advanced features. This may require logging in on Chrome.
       </p>
     </div>
   )

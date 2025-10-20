@@ -1,10 +1,13 @@
 import { Settings } from 'lucide-react'
 import React, { useState } from 'react'
+import { toast } from 'sonner'
 
 import '@/styles/globals.css'
 import './styles.css'
 import { Drawers } from '@/client/components/drawers'
 import { ShortcutAssistantModal } from '@/client/components/shortcut-assistant-modal'
+import { Toaster } from '@/components/ui/sonner'
+import { checkAuthentication } from '@/client/lib/auth-check'
 import { DrawerType } from '@/client/types/drawer'
 
 
@@ -28,17 +31,38 @@ function FAB(): React.ReactElement {
     setOpenDrawer(drawer)
   }
 
-  function handleOpenAnalyze(): void {
+  async function handleOpenAnalyze(): Promise<void> {
+    const authStatus = await checkAuthentication()
+    if (!authStatus.isAuthenticated) {
+      toast.info('Please authenticate in Settings to use AI features')
+      setOpenDrawer('settings')
+      setIsOpen(false)
+      return
+    }
     setOpenModal('analyze')
     setIsOpen(false)
   }
 
-  function handleOpenBreakdown(): void {
+  async function handleOpenBreakdown(): Promise<void> {
+    const authStatus = await checkAuthentication()
+    if (!authStatus.isAuthenticated) {
+      toast.info('Please authenticate in Settings to use AI features')
+      setOpenDrawer('settings')
+      setIsOpen(false)
+      return
+    }
     setOpenModal('breakdown')
     setIsOpen(false)
   }
 
   async function handleAddLabels(): Promise<void> {
+    const authStatus = await checkAuthentication()
+    if (!authStatus.isAuthenticated) {
+      toast.info('Please authenticate in Settings to use AI features')
+      setOpenDrawer('settings')
+      setIsOpen(false)
+      return
+    }
     setIsOpen(false)
     try {
       await chrome.runtime.sendMessage({ action: 'addLabels' })
@@ -56,6 +80,7 @@ function FAB(): React.ReactElement {
 
   return (
     <>
+      <Toaster />
       <div className="shortcut-assistant-fab">
         <button
           className={`shortcut-assistant-fab-button ${isOpen ? 'open' : ''}`}
