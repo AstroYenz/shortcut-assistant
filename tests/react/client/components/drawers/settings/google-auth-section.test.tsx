@@ -47,7 +47,7 @@ describe('GoogleAuthSection', function testGoogleAuthSectionSuite() {
 
   it('renders the authentication description', function testRendersDescription() {
     setup()
-    expect(screen.getByText('We need to verify your Google account before enabling advanced features.')).toBeInTheDocument()
+    expect(screen.getByText('We need to verify your Google account before enabling advanced features. This may require logging in on Chrome.')).toBeInTheDocument()
   })
 
   it('displays "Login with Google" text initially', function testLoginButtonText() {
