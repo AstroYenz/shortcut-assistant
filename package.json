@@ -47,7 +47,7 @@
     "eslint": "^8.57.0",
     "eslint-config-yenz": "^8.0.0",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jest": "^28.11.0",
+    "eslint-plugin-jest": "^29.0.1",
     "eslint-plugin-perfectionist": "^4.8.0",
     "globals": "^16.1.0",
     "identity-obj-proxy": "^3.0.0",
